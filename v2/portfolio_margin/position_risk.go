@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+
+	"github.com/adshao/go-binance/v2/futures"
 )
 
 // GetUMPositionRiskService get account balance
@@ -42,15 +44,15 @@ func (s *GetUMPositionRiskService) Do(ctx context.Context, opts ...RequestOption
 
 // UMPositionRisk define position risk info
 type UMPositionRisk struct {
-	EntryPrice       string           `json:"entryPrice"`
-	Leverage         string           `json:"leverage"`
-	MarkPrice        string           `json:"markPrice"`
-	MaxNotionalValue string           `json:"maxNotionalValue"`
-	PositionAmt      string           `json:"positionAmt"`
-	Notional         string           `json:"notional"`
-	Symbol           string           `json:"symbol"`
-	UnRealizedProfit string           `json:"unRealizedProfit"`
-	LiquidationPrice string           `json:"liquidationPrice"`
-	PositionSide     PositionSideType `json:"positionSide"`
-	UpdateTime       int64            `json:"updateTime"`
+	EntryPrice       string                   `json:"entryPrice"`
+	Leverage         string                   `json:"leverage"`
+	MarkPrice        string                   `json:"markPrice"`
+	MaxNotionalValue string                   `json:"maxNotionalValue"`
+	PositionAmt      string                   `json:"positionAmt"`
+	Notional         string                   `json:"notional"`
+	Symbol           string                   `json:"symbol"`
+	UnRealizedProfit string                   `json:"unRealizedProfit"`
+	LiquidationPrice string                   `json:"liquidationPrice"`
+	PositionSide     futures.PositionSideType `json:"positionSide"`
+	UpdateTime       int64                    `json:"updateTime"`
 }

@@ -18,59 +18,14 @@ import (
 	"github.com/adshao/go-binance/v2/common"
 )
 
-// SideType define side type of order
-type SideType string
-
-// PositionSideType define position side type of order
-type PositionSideType string
-
-// OrderType define order type
-type OrderType string
-
-// TimeInForceType define time in force type of order
-type TimeInForceType string
-
-// NewOrderRespType define response JSON verbosity
-type NewOrderRespType string
-
-// OrderExecutionType define order execution type
-type OrderExecutionType string
-
-// OrderStatusType define order status type
-type OrderStatusType string
-
-// SymbolType define symbol type
-type SymbolType string
-
-// SymbolStatusType define symbol status type
-type SymbolStatusType string
-
-// SymbolFilterType define symbol filter type
-type SymbolFilterType string
-
-// SideEffectType define side effect type for orders
-type SideEffectType string
-
-// WorkingType define working type
-type WorkingType string
-
-// MarginType define margin type
-type MarginType string
-
-// ContractType define contract type
-type ContractType string
+// Business Unit
+type BusinessUnitType string
 
 // UserDataEventType define user data event type
 type UserDataEventType string
 
 // UserDataEventReasonType define reason type for user data event
 type UserDataEventReasonType string
-
-// ForceOrderCloseType define reason type for force order
-type ForceOrderCloseType string
-
-// Business Unit
-type BusinessUnitType string
 
 // Endpoints
 const (
@@ -79,75 +34,8 @@ const (
 
 // Global enums
 const (
-	SideTypeBuy  SideType = "BUY"
-	SideTypeSell SideType = "SELL"
-
-	PositionSideTypeBoth  PositionSideType = "BOTH"
-	PositionSideTypeLong  PositionSideType = "LONG"
-	PositionSideTypeShort PositionSideType = "SHORT"
-
-	OrderTypeLimit              OrderType = "LIMIT"
-	OrderTypeMarket             OrderType = "MARKET"
-	OrderTypeStop               OrderType = "STOP"
-	OrderTypeStopMarket         OrderType = "STOP_MARKET"
-	OrderTypeTakeProfit         OrderType = "TAKE_PROFIT"
-	OrderTypeTakeProfitMarket   OrderType = "TAKE_PROFIT_MARKET"
-	OrderTypeTrailingStopMarket OrderType = "TRAILING_STOP_MARKET"
-
-	TimeInForceTypeGTC TimeInForceType = "GTC" // Good Till Cancel
-	TimeInForceTypeIOC TimeInForceType = "IOC" // Immediate or Cancel
-	TimeInForceTypeFOK TimeInForceType = "FOK" // Fill or Kill
-	TimeInForceTypeGTX TimeInForceType = "GTX" // Good Till Crossing (Post Only)
-
-	NewOrderRespTypeACK    NewOrderRespType = "ACK"
-	NewOrderRespTypeRESULT NewOrderRespType = "RESULT"
-
-	OrderExecutionTypeNew         OrderExecutionType = "NEW"
-	OrderExecutionTypePartialFill OrderExecutionType = "PARTIAL_FILL"
-	OrderExecutionTypeFill        OrderExecutionType = "FILL"
-	OrderExecutionTypeCanceled    OrderExecutionType = "CANCELED"
-	OrderExecutionTypeCalculated  OrderExecutionType = "CALCULATED"
-	OrderExecutionTypeExpired     OrderExecutionType = "EXPIRED"
-	OrderExecutionTypeTrade       OrderExecutionType = "TRADE"
-
-	OrderStatusTypeNew             OrderStatusType = "NEW"
-	OrderStatusTypePartiallyFilled OrderStatusType = "PARTIALLY_FILLED"
-	OrderStatusTypeFilled          OrderStatusType = "FILLED"
-	OrderStatusTypeCanceled        OrderStatusType = "CANCELED"
-	OrderStatusTypeRejected        OrderStatusType = "REJECTED"
-	OrderStatusTypeExpired         OrderStatusType = "EXPIRED"
-	OrderStatusTypeNewInsurance    OrderStatusType = "NEW_INSURANCE"
-	OrderStatusTypeNewADL          OrderStatusType = "NEW_ADL"
-
-	SymbolTypeFuture SymbolType = "FUTURE"
-
-	WorkingTypeMarkPrice     WorkingType = "MARK_PRICE"
-	WorkingTypeContractPrice WorkingType = "CONTRACT_PRICE"
-
-	SymbolStatusTypePreTrading   SymbolStatusType = "PRE_TRADING"
-	SymbolStatusTypeTrading      SymbolStatusType = "TRADING"
-	SymbolStatusTypePostTrading  SymbolStatusType = "POST_TRADING"
-	SymbolStatusTypeEndOfDay     SymbolStatusType = "END_OF_DAY"
-	SymbolStatusTypeHalt         SymbolStatusType = "HALT"
-	SymbolStatusTypeAuctionMatch SymbolStatusType = "AUCTION_MATCH"
-	SymbolStatusTypeBreak        SymbolStatusType = "BREAK"
-
-	SymbolFilterTypeLotSize          SymbolFilterType = "LOT_SIZE"
-	SymbolFilterTypePrice            SymbolFilterType = "PRICE_FILTER"
-	SymbolFilterTypePercentPrice     SymbolFilterType = "PERCENT_PRICE"
-	SymbolFilterTypeMarketLotSize    SymbolFilterType = "MARKET_LOT_SIZE"
-	SymbolFilterTypeMaxNumOrders     SymbolFilterType = "MAX_NUM_ORDERS"
-	SymbolFilterTypeMaxNumAlgoOrders SymbolFilterType = "MAX_NUM_ALGO_ORDERS"
-	SymbolFilterTypeMinNotional      SymbolFilterType = "MIN_NOTIONAL"
-
-	SideEffectTypeNoSideEffect SideEffectType = "NO_SIDE_EFFECT"
-	SideEffectTypeMarginBuy    SideEffectType = "MARGIN_BUY"
-	SideEffectTypeAutoRepay    SideEffectType = "AUTO_REPAY"
-
-	MarginTypeIsolated MarginType = "ISOLATED"
-	MarginTypeCrossed  MarginType = "CROSSED"
-
-	ContractTypePerpetual ContractType = "PERPETUAL"
+	BusinessUnitTypeUM BusinessUnitType = "UM"
+	BusinessUnitTypeCM BusinessUnitType = "CM"
 
 	UserDataEventTypeListenKeyExpired UserDataEventType = "listenKeyExpired"
 	UserDataEventTypeRiskLevelChange  UserDataEventType = "riskLevelChange"
@@ -155,9 +43,6 @@ const (
 	// UserDataEventTypeMarginCall           UserDataEventType = "MARGIN_CALL"
 	UserDataEventTypeFuturesAccountUpdate UserDataEventType = "ACCOUNT_UPDATE"
 	UserDataEventTypeFuturesOrderUpdate   UserDataEventType = "ORDER_TRADE_UPDATE"
-
-	ForceOrderCloseTypeLiquidation ForceOrderCloseType = "LIQUIDATION"
-	ForceOrderCloseTypeADL         ForceOrderCloseType = "ADL"
 
 	timestampKey  = "timestamp"
 	signatureKey  = "signature"
