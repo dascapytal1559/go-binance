@@ -42,7 +42,7 @@ type WsUserDataEvent struct {
 	Event                   UserDataEventType         `json:"e"`
 	Time                    int64                     `json:"E"`
 	TransactionTime         int64                     `json:"T"`
-	BusinessUnit            string                    `json:"fs"`
+	BusinessUnit            BusinessUnitType          `json:"fs"`
 	FuturesAccountUpdate    WsFuturesAccountUpdate    `json:"a"`
 	FuturesOrderTradeUpdate WsFuturesOrderTradeUpdate `json:"o"`
 }
