@@ -10,7 +10,7 @@ import (
 
 // Endpoints
 const (
-	baseWsMainUrl = "wss://fstream.binance.com/ws"
+	baseWsMainUrl = "wss://fstream.binance.com/pm/ws"
 )
 
 var (
