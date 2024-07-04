@@ -3,6 +3,7 @@ package portfolio_margin
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/adshao/go-binance/v2/futures"
@@ -117,6 +118,7 @@ func WsUserDataServe(listenKey string, handler WsUserDataHandler, errHandler Err
 		event := new(WsUserDataEvent)
 		err := json.Unmarshal(message, event)
 		if err != nil {
+			log.Println(string(message))
 			errHandler(err)
 			return
 		}
