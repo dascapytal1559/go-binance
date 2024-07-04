@@ -70,7 +70,7 @@ type WsFuturesPosition struct {
 	AccumulatedRealized string                   `json:"cr"`
 	UnrealizedPnL       string                   `json:"up"`
 	Side                futures.PositionSideType `json:"ps"`
-	BreakevenPrice      string                   `json:"bep"`
+	BreakevenPrice      float64                  `json:"bep"`
 }
 
 // WsOrderTradeUpdate define order trade update
