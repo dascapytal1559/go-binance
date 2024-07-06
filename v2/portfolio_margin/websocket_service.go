@@ -65,6 +65,11 @@ const (
 	BusinessUnitTypeCM BusinessUnitType = "CM"
 )
 
+type WsUserDataStreamExpiredEvent struct {
+	Event UserDataEventType `json:"e"`
+	Time  int64             `json:"E"`
+}
+
 type WsUserDataFuturesAccountUpdateEvent struct {
 	Event                UserDataEventType `json:"e"`
 	Time                 int64             `json:"E"`
@@ -132,7 +137,7 @@ type WsUserDataFuturesOrderUpdateEvent struct {
 
 type WsUserDataEvent struct {
 	Event                     UserDataEventType `json:"e"`
-	Time                      int64             `json:"E"`
+	StreamExpiredEvent        *WsUserDataStreamExpiredEvent
 	FuturesAccountUpdateEvent *WsUserDataFuturesAccountUpdateEvent
 	FuturesOrderUpdateEvent   *WsUserDataFuturesOrderUpdateEvent
 }
@@ -149,17 +154,24 @@ func WsUserDataServe(
 		event := new(WsUserDataEvent)
 		err := json.Unmarshal(message, event)
 		if err != nil {
-			errHandler(fmt.Errorf("error unmarshalling base event: %v: %s", err, message))
+			errHandler(fmt.Errorf("error unmarshalling WsUserDataEvent: %v: %s", err, message))
 			return
 		}
 
 		switch event.Event {
 		case UE_StreamExpired:
+			subEvent := new(WsUserDataStreamExpiredEvent)
+			if err := json.Unmarshal(message, subEvent); err != nil {
+				errHandler(fmt.Errorf("error unmarshalling WsUserDataStreamExpiredEvent: %v: %s", err, message))
+				return
+			} else {
+				event.StreamExpiredEvent = subEvent
+			}
 
 		case UE_FuturesAccountUpdate:
 			subEvent := new(WsUserDataFuturesAccountUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("error unmarshalling futures account update event: %v: %s", err, message))
+				errHandler(fmt.Errorf("error unmarshalling WsUserDataFuturesAccountUpdateEvent: %v: %s", err, message))
 				return
 			} else {
 				event.FuturesAccountUpdateEvent = subEvent
@@ -168,7 +180,7 @@ func WsUserDataServe(
 		case UE_FuturesOrderUpdate:
 			subEvent := new(WsUserDataFuturesOrderUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("error unmarshalling futures order update event: %v: %s", err, message))
+				errHandler(fmt.Errorf("error unmarshalling WsUserDataFuturesOrderUpdateEvent: %v: %s", err, message))
 				return
 			} else {
 				event.FuturesOrderUpdateEvent = subEvent
