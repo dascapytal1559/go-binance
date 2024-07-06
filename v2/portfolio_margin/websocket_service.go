@@ -155,15 +155,23 @@ func WsUserDataServe(
 
 		switch event.Event {
 		case UE_StreamExpired:
+
 		case UE_FuturesAccountUpdate:
-			if err := json.Unmarshal(message, event); err != nil {
+			subEvent := new(WsUserDataFuturesAccountUpdateEvent)
+			if err := json.Unmarshal(message, subEvent); err != nil {
 				errHandler(fmt.Errorf("error unmarshalling futures account update event: %v: %s", err, message))
 				return
+			} else {
+				event.FuturesAccountUpdateEvent = subEvent
 			}
+
 		case UE_FuturesOrderUpdate:
-			if err := json.Unmarshal(message, event); err != nil {
+			subEvent := new(WsUserDataFuturesOrderUpdateEvent)
+			if err := json.Unmarshal(message, subEvent); err != nil {
 				errHandler(fmt.Errorf("error unmarshalling futures order update event: %v: %s", err, message))
 				return
+			} else {
+				event.FuturesOrderUpdateEvent = subEvent
 			}
 		}
 
