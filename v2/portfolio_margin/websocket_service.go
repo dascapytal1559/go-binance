@@ -43,9 +43,6 @@ type BusinessUnitType string
 // UserDataEventType define user data event type
 type UserDataEventType string
 
-// UserDataEventReasonType define reason type for user data event
-type UserDataEventReasonType string
-
 const (
 	UE_StreamExpired       UserDataEventType = "listenKeyExpired"
 	UE_RiskLevelChange     UserDataEventType = "riskLevelChange"
@@ -136,10 +133,14 @@ type WsUserDataFuturesOrderUpdateEvent struct {
 }
 
 type WsUserDataEvent struct {
-	Event                     UserDataEventType `json:"e"`
+	Event                     UserDataEventType
 	StreamExpiredEvent        *WsUserDataStreamExpiredEvent
 	FuturesAccountUpdateEvent *WsUserDataFuturesAccountUpdateEvent
 	FuturesOrderUpdateEvent   *WsUserDataFuturesOrderUpdateEvent
+}
+
+type WsUserDataBaseEvent struct {
+	Event UserDataEventType `json:"e"`
 }
 
 // WsUserDataServe serve user data handler with listen key
@@ -151,14 +152,19 @@ func WsUserDataServe(
 	endpoint := fmt.Sprintf("%s/%s", getWsEndpoint(), listenKey)
 	cfg := newWsConfig(endpoint)
 	wsHandler := func(message []byte) {
-		event := new(WsUserDataEvent)
-		err := json.Unmarshal(message, event)
+		baseEvent := new(WsUserDataBaseEvent)
+		err := json.Unmarshal(message, baseEvent)
 		if err != nil {
-			errHandler(fmt.Errorf("error unmarshalling WsUserDataEvent: %v: %s", err, message))
+			errHandler(fmt.Errorf("error unmarshalling WsUserDataBaseEvent: %v: %s", err, message))
 			return
 		}
 
+		event := &WsUserDataEvent{
+			Event: baseEvent.Event,
+		}
+
 		switch event.Event {
+
 		case UE_StreamExpired:
 			subEvent := new(WsUserDataStreamExpiredEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
