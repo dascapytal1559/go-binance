@@ -18,15 +18,6 @@ import (
 	"github.com/adshao/go-binance/v2/common"
 )
 
-// Business Unit
-type BusinessUnitType string
-
-// UserDataEventType define user data event type
-type UserDataEventType string
-
-// UserDataEventReasonType define reason type for user data event
-type UserDataEventReasonType string
-
 // Endpoints
 const (
 	baseApiMainUrl = "https://papi.binance.com"
@@ -34,16 +25,6 @@ const (
 
 // Global enums
 const (
-	BusinessUnitTypeUM BusinessUnitType = "UM"
-	BusinessUnitTypeCM BusinessUnitType = "CM"
-
-	UserDataEventTypeListenKeyExpired UserDataEventType = "listenKeyExpired"
-	UserDataEventTypeRiskLevelChange  UserDataEventType = "riskLevelChange"
-
-	// UserDataEventTypeMarginCall           UserDataEventType = "MARGIN_CALL"
-	UserDataEventTypeFuturesAccountUpdate UserDataEventType = "ACCOUNT_UPDATE"
-	UserDataEventTypeFuturesOrderUpdate   UserDataEventType = "ORDER_TRADE_UPDATE"
-
 	timestampKey  = "timestamp"
 	signatureKey  = "signature"
 	recvWindowKey = "recvWindow"
