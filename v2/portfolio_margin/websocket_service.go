@@ -146,7 +146,7 @@ func WsUserDataServe(
 		event := new(WsUserDataEvent)
 		err := json.Unmarshal(message, event)
 		if err != nil {
-			errHandler(fmt.Errorf("error unmarshalling WsUserDataEvent: %v: %s", err, message))
+			errHandler(fmt.Errorf("WsUserDataEvent: %v: %s", err, message))
 			return
 		}
 
@@ -157,7 +157,7 @@ func WsUserDataServe(
 		case UE_FuturesAccountUpdate:
 			subEvent := new(WsUserDataFuturesAccountUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("error unmarshalling WsUserDataFuturesAccountUpdateEvent: %v: %s", err, message))
+				errHandler(fmt.Errorf("WsUserDataFuturesAccountUpdateEvent: %v: %s", err, message))
 				return
 			} else {
 				event.FuturesAccountUpdateEvent = subEvent
@@ -166,7 +166,7 @@ func WsUserDataServe(
 		case UE_FuturesOrderUpdate:
 			subEvent := new(WsUserDataFuturesOrderUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("error unmarshalling WsUserDataFuturesOrderUpdateEvent: %v: %s", err, message))
+				errHandler(fmt.Errorf("WsUserDataFuturesOrderUpdateEvent: %v: %s", err, message))
 				return
 			} else {
 				event.FuturesOrderUpdateEvent = subEvent
