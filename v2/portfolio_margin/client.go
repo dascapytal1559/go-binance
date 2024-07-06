@@ -246,6 +246,16 @@ func (c *Client) SetApiEndpoint(url string) *Client {
 	return c
 }
 
+// NewGetBalanceService init getting balance service
+func (c *Client) NewGetBalanceService() *GetBalanceService {
+	return &GetBalanceService{c: c}
+}
+
+// NewGetAccountService init getting account service
+func (c *Client) NewGetAccountService() *GetAccountService {
+	return &GetAccountService{c: c}
+}
+
 // NewGetUMPositionRiskService init getting position risk service
 func (c *Client) NewGetUMPositionRiskService() *GetUMPositionRiskService {
 	return &GetUMPositionRiskService{c: c}
