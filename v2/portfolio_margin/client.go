@@ -237,7 +237,12 @@ func (c *Client) NewGetAccountService() *GetAccountService {
 	return &GetAccountService{c: c}
 }
 
-// NewGetUMPositionRiskService init getting position risk service
+// NewListUMOpenOrdersService init list UM open orders service
+func (c *Client) NewListUMOpenOrdersService() *ListUMOpenOrdersService {
+	return &ListUMOpenOrdersService{c: c}
+}
+
+// NewGetUMPositionRiskService init getting UM position risk service
 func (c *Client) NewGetUMPositionRiskService() *GetUMPositionRiskService {
 	return &GetUMPositionRiskService{c: c}
 }
