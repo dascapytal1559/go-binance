@@ -11,7 +11,7 @@ type Balance struct {
 	Asset               string `json:"asset"`
 	TotalWalletBalance  string `json:"totalWalletBalance"`
 	CrossMarginAsset    string `json:"crossMarginAsset"`
-	CrossWalletBorrowed string `json:"crossWalletBorrowed"`
+	CrossMarginBorrowed string `json:"crossMarginBorrowed"`
 	CrossMarginFree     string `json:"crossMarginFree"`
 	CrossMarginInterest string `json:"crossMarginInterest"`
 	CrossMarginLocked   string `json:"crossMarginLocked"`
