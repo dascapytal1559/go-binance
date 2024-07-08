@@ -139,6 +139,17 @@ type WsUserDataFuturesOrderUpdateEvent struct {
 	} `json:"o"`
 }
 
+type WsUserDataMarginLiabilityUpdateEvent struct {
+	Event          UserDataEventType `json:"e"`
+	Time           int64             `json:"E"`
+	Asset          string            `json:"a"`
+	Type           string            `json:"t"`
+	TransactionId  int64             `json:"tx"`
+	Principal      string            `json:"p"`
+	Interest       string            `json:"i"`
+	TotalLiability string            `json:"l"`
+}
+
 type WsUserDataMarginAccountUpdateEvent struct {
 	Event          UserDataEventType `json:"e"`
 	Time           int64             `json:"E"`
@@ -214,6 +225,7 @@ type WsUserDataEvent struct {
 	FuturesAccountUpdateEvent  *WsUserDataFuturesAccountUpdateEvent
 	FuturesLeverageUpdateEvent *WsUserDataFuturesLeverageUpdateEvent
 	FuturesOrderUpdateEvent    *WsUserDataFuturesOrderUpdateEvent
+	MarginLiabilityUpdateEvent *WsUserDataMarginLiabilityUpdateEvent
 	MarginAccountUpdateEvent   *WsUserDataMarginAccountUpdateEvent
 	MarginBalanceUpdateEvent   *WsUserDataMarginBalanceUpdateEvent
 	MarginOrderUpdateEvent     *WsUserDataMarginOrderUpdateEvent
@@ -266,10 +278,19 @@ func WsUserDataServe(
 				event.FuturesOrderUpdateEvent = subEvent
 			}
 
+		case UETypeMarginLiabilityUpdate:
+			subEvent := new(WsUserDataMarginLiabilityUpdateEvent)
+			if err := json.Unmarshal(message, subEvent); err != nil {
+				errHandler(fmt.Errorf("WsUserDataMarginLiabilityUpdateEvent: %v: %s", err, message))
+				return
+			} else {
+				event.MarginLiabilityUpdateEvent = subEvent
+			}
+
 		case UETypeMarginAccountUpdate:
 			subEvent := new(WsUserDataMarginAccountUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("WsUserDataMarginAccountUpdate: %v: %s", err, message))
+				errHandler(fmt.Errorf("WsUserDataMarginAccountUpdateEvent: %v: %s", err, message))
 				return
 			} else {
 				event.MarginAccountUpdateEvent = subEvent
@@ -278,7 +299,7 @@ func WsUserDataServe(
 		case UETypeMarginBalanceUpdate:
 			subEvent := new(WsUserDataMarginBalanceUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("WsUserDataMarginBalanceUpdate: %v: %s", err, message))
+				errHandler(fmt.Errorf("WsUserDataMarginBalanceUpdateEvent: %v: %s", err, message))
 				return
 			} else {
 				event.MarginBalanceUpdateEvent = subEvent
@@ -287,7 +308,7 @@ func WsUserDataServe(
 		case UETypeMarginOrderUpdate:
 			subEvent := new(WsUserDataMarginOrderUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("WsUserDataMarginOrderUpdate: %v: %s", err, message))
+				errHandler(fmt.Errorf("WsUserDataMarginOrderUpdateEvent: %v: %s", err, message))
 				return
 			} else {
 				event.MarginOrderUpdateEvent = subEvent
