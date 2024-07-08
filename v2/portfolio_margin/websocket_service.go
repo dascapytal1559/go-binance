@@ -191,7 +191,7 @@ type WsUserDataMarginOrderUpdateEvent struct {
 	IgnoreM                 bool                    `json:"M"` // Ignore
 	CreateTime              int64                   `json:"O"` // Order creation time
 	FilledQuoteQuantity     string                  `json:"Z"` // Cumulative quote asset transacted quantity
-	LastQuoteQuantity       string                  `json:"Y"` // Last quote asset transacted quantity (i.e. lastPrice * lastQty)
+	LastQuoteQuantity       float64                 `json:"Y"` // Last quote asset transacted quantity (i.e. lastPrice * lastQty)
 	QuoteQuantity           string                  `json:"Q"` // Quote Order Quantity
 	SelfTradePreventionMode string                  `json:"V"` // selfTradePreventionMode
 
