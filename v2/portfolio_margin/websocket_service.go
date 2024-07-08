@@ -144,7 +144,7 @@ type WsUserDataMarginLiabilityUpdateEvent struct {
 	Time           int64             `json:"E"`
 	Asset          string            `json:"a"`
 	Type           string            `json:"t"`
-	TransactionId  int64             `json:"tx"`
+	TransactionId  int64             `json:"T"`
 	Principal      string            `json:"p"`
 	Interest       string            `json:"i"`
 	TotalLiability string            `json:"l"`
