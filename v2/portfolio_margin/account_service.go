@@ -6,6 +6,23 @@ import (
 	"net/http"
 )
 
+// Balance define user balance of your account
+type Balance struct {
+	Asset               string `json:"asset"`
+	TotalWalletBalance  string `json:"totalWalletBalance"`
+	CrossMarginAsset    string `json:"crossMarginAsset"`
+	CrossWalletBorrowed string `json:"crossWalletBorrowed"`
+	CrossMarginFree     string `json:"crossMarginFree"`
+	CrossMarginInterest string `json:"crossMarginInterest"`
+	CrossMarginLocked   string `json:"crossMarginLocked"`
+	UMWalletBalance     string `json:"umWalletBalance"`
+	UMUnrealizedPNL     string `json:"umUnrealizedPNL"`
+	CMWalletBalance     string `json:"cmWalletBalance"`
+	CMUnrealizedPNL     string `json:"cmUnrealizedPNL"`
+	UpdateTime          int64  `json:"updateTime"`
+	NegativeBalance     string `json:"negativeBalance"`
+}
+
 // GetBalanceService get account balance
 type GetBalanceService struct {
 	c *Client
@@ -30,21 +47,18 @@ func (s *GetBalanceService) Do(ctx context.Context, opts ...RequestOption) (res 
 	return res, nil
 }
 
-// Balance define user balance of your account
-type Balance struct {
-	Asset               string `json:"asset"`
-	TotalWalletBalance  string `json:"totalWalletBalance"`
-	CrossMarginAsset    string `json:"crossMarginAsset"`
-	CrossWalletBorrowed string `json:"crossWalletBorrowed"`
-	CrossMarginFree     string `json:"crossMarginFree"`
-	CrossMarginInterest string `json:"crossMarginInterest"`
-	CrossMarginLocked   string `json:"crossMarginLocked"`
-	UMWalletBalance     string `json:"umWalletBalance"`
-	UMUnrealizedPNL     string `json:"umUnrealizedPNL"`
-	CMWalletBalance     string `json:"cmWalletBalance"`
-	CMUnrealizedPNL     string `json:"cmUnrealizedPNL"`
-	UpdateTime          int64  `json:"updateTime"`
-	NegativeBalance     string `json:"negativeBalance"`
+// Account define account info
+type Account struct {
+	UniMMR                   string `json:"uniMMR"`
+	AccountEquity            string `json:"accountEquity"`
+	ActualEquity             string `json:"actualEquity"`
+	AccountInitialMargin     string `json:"accountInitialMargin"`
+	AccountMaintMargin       string `json:"accountMaintMargin"`
+	AccountStatus            string `json:"accountStatus"`
+	VirtualMaxWithdrawAmount string `json:"virtualMaxWithdrawAmount"`
+	TotalAvailableBalance    string `json:"totalAvailableBalance"`
+	TotalMarginOpenLoss      string `json:"totalMarginOpenLoss"`
+	UpdateTime               int64  `json:"updateTime"`
 }
 
 // GetAccountService get account info
@@ -69,18 +83,4 @@ func (s *GetAccountService) Do(ctx context.Context, opts ...RequestOption) (res 
 		return nil, err
 	}
 	return res, nil
-}
-
-// Account define account info
-type Account struct {
-	UniMMR                   string `json:"uniMMR"`
-	AccountEquity            string `json:"accountEquity"`
-	ActualEquity             string `json:"actualEquity"`
-	AccountInitialMargin     string `json:"accountInitialMargin"`
-	AccountMaintMargin       string `json:"accountMaintMargin"`
-	AccountStatus            string `json:"accountStatus"`
-	VirtualMaxWithdrawAmount string `json:"virtualMaxWithdrawAmount"`
-	TotalAvailableBalance    string `json:"totalAvailableBalance"`
-	TotalMarginOpenLoss      string `json:"totalMarginOpenLoss"`
-	UpdateTime               int64  `json:"updateTime"`
 }
