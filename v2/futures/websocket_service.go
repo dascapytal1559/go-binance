@@ -701,10 +701,18 @@ func getDepthStreamName(symbol string, levels string, rate string) (string, erro
 	return fmt.Sprintf("%s@depth%s%s", strings.ToLower(symbol), levelsFinal, rateFinal), nil
 }
 
-func getCombinedDepthStreamName(slrs [][]string) (string, error) {
-	endpoints := make([]string, 0, len(slrs)+1)
-	endpoints = append(endpoints, getCombinedEndpoint())
-	for _, slr := range slrs {
+func getDepthEndpoint(symbol string, levels string, rate string) (string, error) {
+	endpoint, err := getDepthStreamName(symbol, levels, rate)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s/%s", getWsEndpoint(), endpoint), nil
+}
+
+func getDepthCombinedEndpoint(slrs [][]string) (string, error) {
+	endpoints := make([]string, len(slrs)+1)
+	endpoints[0] = getCombinedEndpoint()
+	for i, slr := range slrs {
 		if len(slr) != 3 {
 			return "", errors.New("invalid symbol-levels-rate")
 		}
@@ -714,14 +722,14 @@ func getCombinedDepthStreamName(slrs [][]string) (string, error) {
 			return "", err
 		}
 
-		endpoints = append(endpoints, partialEndpoint)
+		endpoints[i+1] = partialEndpoint
 	}
 
 	return strings.Join(endpoints, "/"), nil
 }
 
 // wsDepthServe Partial and Diff. depth handler
-func wsDepthServe(endpoint string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
+func wsDepthServe(endpoint string, combined bool, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
 	cfg := newWsConfig(endpoint)
 	wsHandler := func(message []byte) {
 		j, err := newJSON(message)
@@ -730,6 +738,9 @@ func wsDepthServe(endpoint string, handler WsDepthHandler, errHandler ErrHandler
 			return
 		}
 		event := new(WsDepthEvent)
+		if combined {
+			j = j.Get("data")
+		}
 		event.Event = j.Get("e").MustString()
 		event.Time = j.Get("E").MustInt64()
 		event.TransactionTime = j.Get("T").MustInt64()
@@ -761,58 +772,57 @@ func wsDepthServe(endpoint string, handler WsDepthHandler, errHandler ErrHandler
 }
 
 // WsPartialDepthServe serve websocket partial depth handler with a symbol
-func wsPartialDepthServe(symbol string, levels string, rate string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	endpoint, err := getDepthStreamName(symbol, levels, rate)
+func WsPartialDepthServe(symbol string, levels string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
+	endpoint, err := getDepthEndpoint(symbol, levels, "")
 	if err != nil {
 		return nil, nil, err
 	}
-	return wsDepthServe(endpoint, handler, errHandler)
-}
-
-// WsPartialDepthServe serve websocket partial depth handler.
-func WsPartialDepthServe(symbol string, levels string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	return wsPartialDepthServe(symbol, levels, "", handler, errHandler)
+	return wsDepthServe(endpoint, false, handler, errHandler)
 }
 
 // WsPartialDepthServeWithRate serve websocket partial depth handler with rate.
 func WsPartialDepthServeWithRate(symbol string, levels string, rate string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	return wsPartialDepthServe(symbol, levels, rate, handler, errHandler)
+	endpoint, err := getDepthEndpoint(symbol, levels, rate)
+	if err != nil {
+		return nil, nil, err
+	}
+	return wsDepthServe(endpoint, false, handler, errHandler)
 }
 
 // WsCombinedPartialDepthServe is similar to WsPartialDepthServe, but it for multiple symbols
 func WsCombinedPartialDepthServe(slrs [][]string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	endpoint, err := getCombinedDepthStreamName(slrs)
+	endpoint, err := getDepthCombinedEndpoint(slrs)
 	if err != nil {
 		return nil, nil, err
 	}
-	return wsDepthServe(endpoint, handler, errHandler)
+	return wsDepthServe(endpoint, true, handler, errHandler)
 }
 
 // WsDiffDepthServe serve websocket diff. depth handler.
 func WsDiffDepthServe(symbol string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	endpoint, err := getDepthStreamName(symbol, "", "")
+	endpoint, err := getDepthEndpoint(symbol, "", "")
 	if err != nil {
 		return nil, nil, err
 	}
-	return wsDepthServe(endpoint, handler, errHandler)
+	return wsDepthServe(endpoint, false, handler, errHandler)
 }
 
 // WsDiffDepthServeWithRate serve websocket diff. depth handler with rate.
 func WsDiffDepthServeWithRate(symbol string, rate string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	endpoint, err := getDepthStreamName(symbol, "", rate)
+	endpoint, err := getDepthEndpoint(symbol, "", rate)
 	if err != nil {
 		return nil, nil, err
 	}
-	return wsDepthServe(endpoint, handler, errHandler)
+	return wsDepthServe(endpoint, false, handler, errHandler)
 }
 
 // WsCombinedDiffDepthServe is similar to WsDiffDepthServe, but it for multiple symbols
 func WsCombinedDiffDepthServe(slrs [][]string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	endpoint, err := getCombinedDepthStreamName(slrs)
+	endpoint, err := getDepthCombinedEndpoint(slrs)
 	if err != nil {
 		return nil, nil, err
 	}
-	return wsDepthServe(endpoint, handler, errHandler)
+	return wsDepthServe(endpoint, true, handler, errHandler)
 }
 
 // WsBLVTInfoEvent define websocket BLVT info event
