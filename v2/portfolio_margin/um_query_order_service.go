@@ -9,25 +9,26 @@ import (
 )
 
 // Order define order info
-type UMOrder struct {
+type UMQueryOrder struct {
+	AveragePrice            string                   `json:"avgPrice"`
 	ClientOrderID           string                   `json:"clientOrderId"`
-	CumQuantity             string                   `json:"cumQty"`
-	CumQuote                string                   `json:"cumQuote"`
+	CumulativeQuote         string                   `json:"cumQuote"`
 	ExecutedQuantity        string                   `json:"executedQty"`
 	OrderID                 int64                    `json:"orderId"`
-	AvgPrice                string                   `json:"avgPrice"`
-	OrigQuantity            string                   `json:"origQty"`
+	OriginalQuantity        string                   `json:"origQty"`
+	OriginalType            futures.OrderType        `json:"origType"`
 	Price                   string                   `json:"price"`
 	ReduceOnly              bool                     `json:"reduceOnly"`
 	Side                    futures.SideType         `json:"side"`
 	PositionSide            futures.PositionSideType `json:"positionSide"`
 	Status                  futures.OrderStatusType  `json:"status"`
 	Symbol                  string                   `json:"symbol"`
+	Time                    int64                    `json:"time"`
 	TimeInForce             futures.TimeInForceType  `json:"timeInForce"`
 	Type                    futures.OrderType        `json:"type"`
+	UpdateTime              int64                    `json:"updateTime"`
 	SelfTradePreventionMode string                   `json:"selfTradePreventionMode"`
 	GoodTillDate            int64                    `json:"goodTillDate"`
-	UpdateTime              int64                    `json:"updateTime"`
 }
 
 // ListUMOpenOrdersService list opened orders
@@ -43,7 +44,7 @@ func (s *ListUMOpenOrdersService) Symbol(symbol string) *ListUMOpenOrdersService
 }
 
 // Do send request
-func (s *ListUMOpenOrdersService) Do(ctx context.Context, opts ...RequestOption) (res []*UMOrder, err error) {
+func (s *ListUMOpenOrdersService) Do(ctx context.Context, opts ...RequestOption) (res []*UMQueryOrder, err error) {
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/papi/v1/um/openOrders",
@@ -54,12 +55,12 @@ func (s *ListUMOpenOrdersService) Do(ctx context.Context, opts ...RequestOption)
 	}
 	data, _, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
-		return []*UMOrder{}, err
+		return []*UMQueryOrder{}, err
 	}
-	res = make([]*UMOrder, 0)
+	res = make([]*UMQueryOrder, 0)
 	err = json.Unmarshal(data, &res)
 	if err != nil {
-		return []*UMOrder{}, err
+		return []*UMQueryOrder{}, err
 	}
 	return res, nil
 }

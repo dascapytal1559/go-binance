@@ -237,6 +237,11 @@ func (c *Client) NewGetAccountService() *GetAccountService {
 	return &GetAccountService{c: c}
 }
 
+// NewListMarginOpenOrdersService init list margin open orders service
+func (c *Client) NewListMarginOpenOrdersService() *ListMarginOpenOrdersService {
+	return &ListMarginOpenOrdersService{c: c}
+}
+
 // NewGetAccountService init getting account service
 func (c *Client) NewGetUMAccountService() *GetUMAccountService {
 	return &GetUMAccountService{c: c}
