@@ -709,10 +709,9 @@ func getDepthEndpoint(symbol string, levels string, rate string) (string, error)
 	return fmt.Sprintf("%s/%s", getWsEndpoint(), endpoint), nil
 }
 
-func getDepthCombinedEndpoint(slrs [][]string) (string, error) {
-	endpoints := make([]string, len(slrs)+1)
-	endpoints[0] = getCombinedEndpoint()
-	for i, slr := range slrs {
+func getDepthCombinedEndpoint(symbolLevelsRates [][]string) (string, error) {
+	streamNames := make([]string, len(symbolLevelsRates))
+	for i, slr := range symbolLevelsRates {
 		if len(slr) != 3 {
 			return "", errors.New("invalid symbol-levels-rate")
 		}
@@ -722,10 +721,10 @@ func getDepthCombinedEndpoint(slrs [][]string) (string, error) {
 			return "", err
 		}
 
-		endpoints[i+1] = partialEndpoint
+		streamNames[i+1] = partialEndpoint
 	}
 
-	return strings.Join(endpoints, "/"), nil
+	return getCombinedEndpoint() + strings.Join(streamNames, "/"), nil
 }
 
 // wsDepthServe Partial and Diff. depth handler
@@ -790,8 +789,8 @@ func WsPartialDepthServeWithRate(symbol string, levels string, rate string, hand
 }
 
 // WsCombinedPartialDepthServe is similar to WsPartialDepthServe, but it for multiple symbols
-func WsCombinedPartialDepthServe(slrs [][]string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	endpoint, err := getDepthCombinedEndpoint(slrs)
+func WsCombinedPartialDepthServe(symbolLevelsRates [][]string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
+	endpoint, err := getDepthCombinedEndpoint(symbolLevelsRates)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -817,8 +816,8 @@ func WsDiffDepthServeWithRate(symbol string, rate string, handler WsDepthHandler
 }
 
 // WsCombinedDiffDepthServe is similar to WsDiffDepthServe, but it for multiple symbols
-func WsCombinedDiffDepthServe(slrs [][]string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	endpoint, err := getDepthCombinedEndpoint(slrs)
+func WsCombinedDiffDepthServe(symbolLevelsRates [][]string, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
+	endpoint, err := getDepthCombinedEndpoint(symbolLevelsRates)
 	if err != nil {
 		return nil, nil, err
 	}
