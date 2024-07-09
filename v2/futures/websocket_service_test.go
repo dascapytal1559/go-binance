@@ -1215,25 +1215,22 @@ func (s *websocketServiceTestSuite) TestPartialDepthServe() {
 }
 
 func (s *websocketServiceTestSuite) TestPartialDepthServeWithValidRate() {
-	rateMs := "250"
-	s.testPartialDepthServe(rateMs, nil, 1)
-	rateMs = "500"
-	s.testPartialDepthServe(rateMs, nil, 2)
-	rateMs = "100"
-	s.testPartialDepthServe(rateMs, nil, 3)
+	s.testPartialDepthServe("250ms", nil, 1)
+	s.testPartialDepthServe("500ms", nil, 2)
+	s.testPartialDepthServe("100ms", nil, 3)
 }
 
 func (s *websocketServiceTestSuite) TestPartialDepthServeWithInvalidRate() {
 	randSrc := rand.NewSource(time.Now().UnixNano())
 	rand := rand.New(randSrc)
 	for {
-		rateMs := fmt.Sprintf("%d", rand.Intn(100)*10)
-		switch rateMs {
-		case "250":
-		case "500":
-		case "100":
+		rate := fmt.Sprintf("%dms", rand.Intn(100)*10)
+		switch rate {
+		case "100ms":
+		case "250ms":
+		case "500ms":
 		default:
-			s.testPartialDepthServe(rateMs, errors.New("invalid rate"), 0)
+			s.testPartialDepthServe(rate, errors.New("invalid rate"), 0)
 			return
 		}
 	}
@@ -1369,22 +1366,22 @@ func (s *websocketServiceTestSuite) TestDiffDepthServe() {
 }
 
 func (s *websocketServiceTestSuite) TestDiffDepthServeWithValidRate() {
-	s.testDiffDepthServe("250", nil, 1)
-	s.testDiffDepthServe("500", nil, 2)
-	s.testDiffDepthServe("100", nil, 3)
+	s.testDiffDepthServe("250ms", nil, 1)
+	s.testDiffDepthServe("500ms", nil, 2)
+	s.testDiffDepthServe("100ms", nil, 3)
 }
 
 func (s *websocketServiceTestSuite) TestDiffDepthServeWithInvalidRate() {
 	randSrc := rand.NewSource(time.Now().UnixNano())
 	rand := rand.New(randSrc)
 	for {
-		rateMs := fmt.Sprintf("%d", rand.Intn(100)*10)
-		switch rateMs {
-		case "250":
-		case "500":
-		case "100":
+		rate := fmt.Sprintf("%dms", rand.Intn(100)*10)
+		switch rate {
+		case "100ms":
+		case "250ms":
+		case "500ms":
 		default:
-			s.testPartialDepthServe(rateMs, errors.New("invalid rate"), 0)
+			s.testPartialDepthServe(rate, errors.New("invalid rate"), 0)
 			return
 		}
 	}
