@@ -120,8 +120,8 @@ type WsUserDataFuturesOrderUpdateEvent struct {
 		Status               futures.OrderStatusType    `json:"X"`            // Order status
 		ID                   int64                      `json:"i"`            // Order ID
 		LastFilledQty        string                     `json:"l"`            // Order Last Filled Quantity
-		LastFilledPrice      string                     `json:"L"`            // Last Filled Price
 		AccumulatedFilledQty string                     `json:"z"`            // Order Filled Accumulated Quantity
+		LastFilledPrice      string                     `json:"L"`            // Last Filled Price
 		CommissionAsset      string                     `json:"N"`            // Commission Asset, will not push if no commission
 		Commission           string                     `json:"n"`            // Commission, will not push if no commission
 		TradeTime            int64                      `json:"T"`            // Order Trade Time
@@ -176,8 +176,8 @@ type WsUserDataMarginOrderUpdateEvent struct {
 	Time                    int64                   `json:"E"` // Event time
 	Symbol                  string                  `json:"s"` // Symbol
 	ClientOrderId           string                  `json:"c"` // Client order ID
-	Side                    string                  `json:"S"` // Side
-	Type                    string                  `json:"o"` // Order type
+	Side                    binance.SideType        `json:"S"` // Side
+	Type                    binance.OrderType       `json:"o"` // Order type
 	TimeInForce             binance.TimeInForceType `json:"f"` // Time in force
 	Quantity                string                  `json:"q"` // Order quantity
 	Price                   string                  `json:"p"` // Order price
@@ -185,13 +185,13 @@ type WsUserDataMarginOrderUpdateEvent struct {
 	IcebergQuantity         string                  `json:"F"` // Iceberg quantity
 	OrderListId             int64                   `json:"g"` // OrderListId
 	OrigCustomOrderId       string                  `json:"C"` // Original client order ID; This is the ID of the order being canceled
-	ExecutionType           string                  `json:"x"` /// Current execution type
-	Status                  string                  `json:"X"` // Current order status
+	ExecutionType           binance.OrderStatusType `json:"x"` /// Current execution type
+	Status                  binance.OrderStatusType `json:"X"` // Current order status
 	RejectReason            string                  `json:"r"` // Order reject reason; will be an error code.
 	Id                      int64                   `json:"i"` // Order ID
-	LastFilledQuantity      string                  `json:"l"` // Last executed quantity
-	LastFilledPrice         string                  `json:"L"` // Last executed price
-	FilledQuantity          string                  `json:"z"` // Cumulative filled quantity
+	LatestVolume            string                  `json:"l"` // Last executed quantity
+	FilledVolume            string                  `json:"z"` // Cumulative filled quantity
+	LatestPrice             string                  `json:"L"` // Last executed price
 	FeeAsset                string                  `json:"N"` // Commission asset
 	FeeCost                 string                  `json:"n"` // Commission amount
 	TransactionTime         int64                   `json:"T"` // Transaction time
@@ -201,22 +201,22 @@ type WsUserDataMarginOrderUpdateEvent struct {
 	IsMaker                 bool                    `json:"m"` // Is this trade the maker side?
 	IgnoreM                 bool                    `json:"M"` // Ignore
 	CreateTime              int64                   `json:"O"` // Order creation time
-	FilledQuoteQuantity     string                  `json:"Z"` // Cumulative quote asset transacted quantity
-	LastQuoteQuantity       float64                 `json:"Y"` // Last quote asset transacted quantity (i.e. lastPrice * lastQty)
-	QuoteQuantity           string                  `json:"Q"` // Quote Order Quantity
+	FilledQuoteVolume       string                  `json:"Z"` // Cumulative quote asset transacted quantity
+	LatestQuoteVolume       float64                 `json:"Y"` // Last quote asset transacted quantity (i.e. lastPrice * lastQty)
+	QuoteVolume             string                  `json:"Q"` // Quote Order Quantity
 	SelfTradePreventionMode string                  `json:"V"` // selfTradePreventionMode
 
 	//These are fields that appear in the payload only if certain conditions are met.
 	TrailingDelta         int64  `json:"d"` // Trailing Delta; This is only visible if the order was a trailing stop order.
-	PreventedMatchId      int64  `json:"v"` // Prevented Match Id; This is only visible if the order expire due to STP trigger.
 	TrailingTime          int64  `json:"D"` // Trailing Time; This is only visible if the trailing stop order has been activated.
 	StrategyId            int64  `json:"j"` // Strategy ID; This is only visible if the strategyId parameter was provided upon order placement
 	StrategyType          int64  `json:"J"` // Strategy Type; This is only visible if the strategyType parameter was provided upon order placement
+	PreventedMatchId      int64  `json:"v"` // Prevented Match Id; This is only visible if the order expire due to STP trigger.
+	PreventedQuantity     string `json:"A"` // Prevented Quantity; This is only visible if the order expired due to STP trigger.
+	LastPreventedQuantity string `json:"B"` // Last Prevented Quantity; This is only visible if the order expired due to STP trigger.
 	WorkingTime           int64  `json:"W"` // Working Time; This is only visible if the order has been placed on the book.
 	TradeGroupId          int64  `json:"u"` // TradeGroupId; This is only visible if the account is part of a trade group and the order expired due to STP trigger.
 	CounterOrderId        int64  `json:"U"` // CounterOrderId; This is only visible if the order expired due to STP trigger.
-	PreventedQuantity     string `json:"A"` // Prevented Quantity; This is only visible if the order expired due to STP trigger.
-	LastPreventedQuantity string `json:"B"` // Last Prevented Quantity; This is only visible if the order expired due to STP trigger.
 }
 
 type WsUserDataEvent struct {
