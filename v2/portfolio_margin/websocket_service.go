@@ -45,23 +45,112 @@ type BusinessUnitType string
 type UserDataEventType string
 
 const (
-	UETypeStreamExpired       UserDataEventType = "listenKeyExpired"
-	UETypeRiskLevelChange     UserDataEventType = "riskLevelChange"
-	UETypeOpenOrderLossUpdate UserDataEventType = "openOrderLoss"
+	UETypeStreamExpired   UserDataEventType = "listenKeyExpired"
+	UETypeRiskLevelChange UserDataEventType = "riskLevelChange"
+
+	UETypeMarginAccountUpdate       UserDataEventType = "outboundAccountPosition"
+	UETypeMarginBalanceUpdate       UserDataEventType = "balanceUpdate"
+	UETypeMarginLiabilityUpdate     UserDataEventType = "liabilityChange"
+	UETypeMarginOpenOrderLossUpdate UserDataEventType = "openOrderLoss"
+	UETypeMarginOrderUpdate         UserDataEventType = "executionReport"
 
 	UETypeFuturesAccountUpdate   UserDataEventType = "ACCOUNT_UPDATE"
 	UETypeFuturesLeverageUpdate  UserDataEventType = "ACCOUNT_CONFIG_UPDATE"
 	UETypeFuturesOrderUpdate     UserDataEventType = "ORDER_TRADE_UPDATE"
 	UETypeFuturesCondOrderUpdate UserDataEventType = "CONDITIONAL_ORDER_TRADE_UPDATE"
 
-	UETypeMarginAccountUpdate   UserDataEventType = "outboundAccountPosition"
-	UETypeMarginBalanceUpdate   UserDataEventType = "balanceUpdate"
-	UETypeMarginOrderUpdate     UserDataEventType = "executionReport"
-	UETypeMarginLiabilityUpdate UserDataEventType = "liabilityChange"
-
 	BusinessUnitTypeUM BusinessUnitType = "UM"
 	BusinessUnitTypeCM BusinessUnitType = "CM"
 )
+
+type WsUserDataMarginAccountUpdateEvent struct {
+	Event          UserDataEventType `json:"e"`
+	Time           int64             `json:"E"`
+	LastUpdateTime int64             `json:"u"`
+	UpdateId       int64             `json:"U"`
+	Balances       []struct {
+		Asset  string `json:"a"`
+		Free   string `json:"f"`
+		Locked string `json:"l"`
+	} `json:"B"`
+}
+
+type WsUserDataMarginBalanceUpdateEvent struct {
+	Event           UserDataEventType `json:"e"`
+	Time            int64             `json:"E"`
+	TransactionTime int64             `json:"T"`
+	UpdateId        int64             `json:"U"`
+	Asset           string            `json:"a"`
+	BalanceDelta    string            `json:"d"`
+}
+
+type WsUserDataMarginLiabilityUpdateEvent struct {
+	Event          UserDataEventType `json:"e"`
+	Time           int64             `json:"E"`
+	Asset          string            `json:"a"`
+	Type           string            `json:"t"`
+	TransactionId  int64             `json:"T"`
+	Principal      string            `json:"p"`
+	Interest       string            `json:"i"`
+	TotalLiability string            `json:"l"`
+}
+
+type WsUserDataMarginOpenOrderLossUpdateEvent struct {
+	Event   UserDataEventType `json:"e"`
+	Time    int64             `json:"E"`
+	Updates []struct {
+		Asset  string `json:"a"`
+		Amount string `json:"o"`
+	} `json:"O"`
+}
+
+type WsUserDataMarginOrderUpdateEvent struct {
+	Event                   UserDataEventType       `json:"e"` // Event type
+	Time                    int64                   `json:"E"` // Event time
+	Symbol                  string                  `json:"s"` // Symbol
+	ClientOrderId           string                  `json:"c"` // Client order ID
+	Side                    binance.SideType        `json:"S"` // Side
+	Type                    binance.OrderType       `json:"o"` // Order type
+	TimeInForce             binance.TimeInForceType `json:"f"` // Time in force
+	Quantity                string                  `json:"q"` // Order quantity
+	Price                   string                  `json:"p"` // Order price
+	StopPrice               string                  `json:"P"` // Stop price
+	IcebergQuantity         string                  `json:"F"` // Iceberg quantity
+	OrderListId             int64                   `json:"g"` // OrderListId
+	OrigCustomOrderId       string                  `json:"C"` // Original client order ID; This is the ID of the order being canceled
+	ExecutionType           binance.OrderStatusType `json:"x"` /// Current execution type
+	Status                  binance.OrderStatusType `json:"X"` // Current order status
+	RejectReason            string                  `json:"r"` // Order reject reason; will be an error code.
+	Id                      int64                   `json:"i"` // Order ID
+	LatestVolume            string                  `json:"l"` // Last executed quantity
+	FilledVolume            string                  `json:"z"` // Cumulative filled quantity
+	LatestPrice             string                  `json:"L"` // Last executed price
+	FeeAsset                string                  `json:"N"` // Commission asset
+	FeeCost                 string                  `json:"n"` // Commission amount
+	TransactionTime         int64                   `json:"T"` // Transaction time
+	TradeId                 int64                   `json:"t"` // Trade ID
+	IgnoreI                 int64                   `json:"I"` // Ignore
+	IsInOrderBook           bool                    `json:"w"` // Is the order on the book?
+	IsMaker                 bool                    `json:"m"` // Is this trade the maker side?
+	IgnoreM                 bool                    `json:"M"` // Ignore
+	CreateTime              int64                   `json:"O"` // Order creation time
+	FilledQuoteVolume       string                  `json:"Z"` // Cumulative quote asset transacted quantity
+	LatestQuoteVolume       float64                 `json:"Y"` // Last quote asset transacted quantity (i.e. lastPrice * lastQty)
+	QuoteVolume             string                  `json:"Q"` // Quote Order Quantity
+	SelfTradePreventionMode string                  `json:"V"` // selfTradePreventionMode
+
+	//These are fields that appear in the payload only if certain conditions are met.
+	TrailingDelta         int64  `json:"d|omitempty"` // Trailing Delta; This is only visible if the order was a trailing stop order.
+	TrailingTime          int64  `json:"D|omitempty"` // Trailing Time; This is only visible if the trailing stop order has been activated.
+	StrategyId            int64  `json:"j|omitempty"` // Strategy ID; This is only visible if the strategyId parameter was provided upon order placement
+	StrategyType          int64  `json:"J|omitempty"` // Strategy Type; This is only visible if the strategyType parameter was provided upon order placement
+	PreventedMatchId      int64  `json:"v|omitempty"` // Prevented Match Id; This is only visible if the order expire due to STP trigger.
+	PreventedQuantity     string `json:"A|omitempty"` // Prevented Quantity; This is only visible if the order expired due to STP trigger.
+	LastPreventedQuantity string `json:"B|omitempty"` // Last Prevented Quantity; This is only visible if the order expired due to STP trigger.
+	WorkingTime           int64  `json:"W|omitempty"` // Working Time; This is only visible if the order has been placed on the book.
+	TradeGroupId          int64  `json:"u|omitempty"` // TradeGroupId; This is only visible if the account is part of a trade group and the order expired due to STP trigger.
+	CounterOrderId        int64  `json:"U|omitempty"` // CounterOrderId; This is only visible if the order expired due to STP trigger.
+}
 
 type WsUserDataFuturesAccountUpdateEvent struct {
 	Event           UserDataEventType `json:"e"`
@@ -139,96 +228,17 @@ type WsUserDataFuturesOrderUpdateEvent struct {
 	} `json:"o"`
 }
 
-type WsUserDataMarginLiabilityUpdateEvent struct {
-	Event          UserDataEventType `json:"e"`
-	Time           int64             `json:"E"`
-	Asset          string            `json:"a"`
-	Type           string            `json:"t"`
-	TransactionId  int64             `json:"T"`
-	Principal      string            `json:"p"`
-	Interest       string            `json:"i"`
-	TotalLiability string            `json:"l"`
-}
-
-type WsUserDataMarginAccountUpdateEvent struct {
-	Event          UserDataEventType `json:"e"`
-	Time           int64             `json:"E"`
-	LastUpdateTime int64             `json:"u"`
-	UpdateId       int64             `json:"U"`
-	Balances       []struct {
-		Asset  string `json:"a"`
-		Free   string `json:"f"`
-		Locked string `json:"l"`
-	} `json:"B"`
-}
-
-type WsUserDataMarginBalanceUpdateEvent struct {
-	Event           UserDataEventType `json:"e"`
-	Time            int64             `json:"E"`
-	TransactionTime int64             `json:"T"`
-	UpdateId        int64             `json:"U"`
-	Asset           string            `json:"a"`
-	BalanceDelta    string            `json:"d"`
-}
-
-type WsUserDataMarginOrderUpdateEvent struct {
-	Event                   UserDataEventType       `json:"e"` // Event type
-	Time                    int64                   `json:"E"` // Event time
-	Symbol                  string                  `json:"s"` // Symbol
-	ClientOrderId           string                  `json:"c"` // Client order ID
-	Side                    binance.SideType        `json:"S"` // Side
-	Type                    binance.OrderType       `json:"o"` // Order type
-	TimeInForce             binance.TimeInForceType `json:"f"` // Time in force
-	Quantity                string                  `json:"q"` // Order quantity
-	Price                   string                  `json:"p"` // Order price
-	StopPrice               string                  `json:"P"` // Stop price
-	IcebergQuantity         string                  `json:"F"` // Iceberg quantity
-	OrderListId             int64                   `json:"g"` // OrderListId
-	OrigCustomOrderId       string                  `json:"C"` // Original client order ID; This is the ID of the order being canceled
-	ExecutionType           binance.OrderStatusType `json:"x"` /// Current execution type
-	Status                  binance.OrderStatusType `json:"X"` // Current order status
-	RejectReason            string                  `json:"r"` // Order reject reason; will be an error code.
-	Id                      int64                   `json:"i"` // Order ID
-	LatestVolume            string                  `json:"l"` // Last executed quantity
-	FilledVolume            string                  `json:"z"` // Cumulative filled quantity
-	LatestPrice             string                  `json:"L"` // Last executed price
-	FeeAsset                string                  `json:"N"` // Commission asset
-	FeeCost                 string                  `json:"n"` // Commission amount
-	TransactionTime         int64                   `json:"T"` // Transaction time
-	TradeId                 int64                   `json:"t"` // Trade ID
-	IgnoreI                 int64                   `json:"I"` // Ignore
-	IsInOrderBook           bool                    `json:"w"` // Is the order on the book?
-	IsMaker                 bool                    `json:"m"` // Is this trade the maker side?
-	IgnoreM                 bool                    `json:"M"` // Ignore
-	CreateTime              int64                   `json:"O"` // Order creation time
-	FilledQuoteVolume       string                  `json:"Z"` // Cumulative quote asset transacted quantity
-	LatestQuoteVolume       float64                 `json:"Y"` // Last quote asset transacted quantity (i.e. lastPrice * lastQty)
-	QuoteVolume             string                  `json:"Q"` // Quote Order Quantity
-	SelfTradePreventionMode string                  `json:"V"` // selfTradePreventionMode
-
-	//These are fields that appear in the payload only if certain conditions are met.
-	TrailingDelta         int64  `json:"d|omitempty"` // Trailing Delta; This is only visible if the order was a trailing stop order.
-	TrailingTime          int64  `json:"D|omitempty"` // Trailing Time; This is only visible if the trailing stop order has been activated.
-	StrategyId            int64  `json:"j|omitempty"` // Strategy ID; This is only visible if the strategyId parameter was provided upon order placement
-	StrategyType          int64  `json:"J|omitempty"` // Strategy Type; This is only visible if the strategyType parameter was provided upon order placement
-	PreventedMatchId      int64  `json:"v|omitempty"` // Prevented Match Id; This is only visible if the order expire due to STP trigger.
-	PreventedQuantity     string `json:"A|omitempty"` // Prevented Quantity; This is only visible if the order expired due to STP trigger.
-	LastPreventedQuantity string `json:"B|omitempty"` // Last Prevented Quantity; This is only visible if the order expired due to STP trigger.
-	WorkingTime           int64  `json:"W|omitempty"` // Working Time; This is only visible if the order has been placed on the book.
-	TradeGroupId          int64  `json:"u|omitempty"` // TradeGroupId; This is only visible if the account is part of a trade group and the order expired due to STP trigger.
-	CounterOrderId        int64  `json:"U|omitempty"` // CounterOrderId; This is only visible if the order expired due to STP trigger.
-}
-
 type WsUserDataEvent struct {
-	Event                      UserDataEventType `json:"e"`
-	Time                       int64             `json:"E"`
-	FuturesAccountUpdateEvent  *WsUserDataFuturesAccountUpdateEvent
-	FuturesLeverageUpdateEvent *WsUserDataFuturesLeverageUpdateEvent
-	FuturesOrderUpdateEvent    *WsUserDataFuturesOrderUpdateEvent
-	MarginLiabilityUpdateEvent *WsUserDataMarginLiabilityUpdateEvent
-	MarginAccountUpdateEvent   *WsUserDataMarginAccountUpdateEvent
-	MarginBalanceUpdateEvent   *WsUserDataMarginBalanceUpdateEvent
-	MarginOrderUpdateEvent     *WsUserDataMarginOrderUpdateEvent
+	Event                          UserDataEventType `json:"e"`
+	Time                           int64             `json:"E"`
+	MarginAccountUpdateEvent       *WsUserDataMarginAccountUpdateEvent
+	MarginBalanceUpdateEvent       *WsUserDataMarginBalanceUpdateEvent
+	MarginLiabilityUpdateEvent     *WsUserDataMarginLiabilityUpdateEvent
+	MarginOpenOrderLossUpdateEvent *WsUserDataMarginOpenOrderLossUpdateEvent
+	MarginOrderUpdateEvent         *WsUserDataMarginOrderUpdateEvent
+	FuturesAccountUpdateEvent      *WsUserDataFuturesAccountUpdateEvent
+	FuturesLeverageUpdateEvent     *WsUserDataFuturesLeverageUpdateEvent
+	FuturesOrderUpdateEvent        *WsUserDataFuturesOrderUpdateEvent
 }
 
 // WsUserDataServe serve user data handler with listen key
@@ -251,68 +261,70 @@ func WsUserDataServe(
 
 		case UETypeStreamExpired:
 
-		case UETypeFuturesAccountUpdate:
-			subEvent := new(WsUserDataFuturesAccountUpdateEvent)
-			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("WsUserDataFuturesAccountUpdateEvent: %v: %s", err, message))
-				return
-			} else {
-				event.FuturesAccountUpdateEvent = subEvent
-			}
-
-		case UETypeFuturesLeverageUpdate:
-			subEvent := new(WsUserDataFuturesLeverageUpdateEvent)
-			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("WsUserDataFuturesLeverageUpdateEvent: %v: %s", err, message))
-				return
-			} else {
-				event.FuturesLeverageUpdateEvent = subEvent
-			}
-
-		case UETypeFuturesOrderUpdate:
-			subEvent := new(WsUserDataFuturesOrderUpdateEvent)
-			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("WsUserDataFuturesOrderUpdateEvent: %v: %s", err, message))
-				return
-			} else {
-				event.FuturesOrderUpdateEvent = subEvent
-			}
-
-		case UETypeMarginLiabilityUpdate:
-			subEvent := new(WsUserDataMarginLiabilityUpdateEvent)
-			if err := json.Unmarshal(message, subEvent); err != nil {
-				errHandler(fmt.Errorf("WsUserDataMarginLiabilityUpdateEvent: %v: %s", err, message))
-				return
-			} else {
-				event.MarginLiabilityUpdateEvent = subEvent
-			}
-
 		case UETypeMarginAccountUpdate:
 			subEvent := new(WsUserDataMarginAccountUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
 				errHandler(fmt.Errorf("WsUserDataMarginAccountUpdateEvent: %v: %s", err, message))
 				return
-			} else {
-				event.MarginAccountUpdateEvent = subEvent
 			}
+			event.MarginAccountUpdateEvent = subEvent
 
 		case UETypeMarginBalanceUpdate:
 			subEvent := new(WsUserDataMarginBalanceUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
 				errHandler(fmt.Errorf("WsUserDataMarginBalanceUpdateEvent: %v: %s", err, message))
 				return
-			} else {
-				event.MarginBalanceUpdateEvent = subEvent
 			}
+			event.MarginBalanceUpdateEvent = subEvent
+
+		case UETypeMarginLiabilityUpdate:
+			subEvent := new(WsUserDataMarginLiabilityUpdateEvent)
+			if err := json.Unmarshal(message, subEvent); err != nil {
+				errHandler(fmt.Errorf("WsUserDataMarginLiabilityUpdateEvent: %v: %s", err, message))
+				return
+			}
+			event.MarginLiabilityUpdateEvent = subEvent
+
+		case UETypeMarginOpenOrderLossUpdate:
+			subEvent := new(WsUserDataMarginOpenOrderLossUpdateEvent)
+			if err := json.Unmarshal(message, subEvent); err != nil {
+				errHandler(fmt.Errorf("WsUserDataMarginOpenOrderLossUpdateEvent: %v: %s", err, message))
+				return
+			}
+			event.MarginOpenOrderLossUpdateEvent = subEvent
 
 		case UETypeMarginOrderUpdate:
 			subEvent := new(WsUserDataMarginOrderUpdateEvent)
 			if err := json.Unmarshal(message, subEvent); err != nil {
 				errHandler(fmt.Errorf("WsUserDataMarginOrderUpdateEvent: %v: %s", err, message))
 				return
-			} else {
-				event.MarginOrderUpdateEvent = subEvent
 			}
+			event.MarginOrderUpdateEvent = subEvent
+
+		case UETypeFuturesAccountUpdate:
+			subEvent := new(WsUserDataFuturesAccountUpdateEvent)
+			if err := json.Unmarshal(message, subEvent); err != nil {
+				errHandler(fmt.Errorf("WsUserDataFuturesAccountUpdateEvent: %v: %s", err, message))
+				return
+			}
+			event.FuturesAccountUpdateEvent = subEvent
+
+		case UETypeFuturesLeverageUpdate:
+			subEvent := new(WsUserDataFuturesLeverageUpdateEvent)
+			if err := json.Unmarshal(message, subEvent); err != nil {
+				errHandler(fmt.Errorf("WsUserDataFuturesLeverageUpdateEvent: %v: %s", err, message))
+				return
+			}
+			event.FuturesLeverageUpdateEvent = subEvent
+
+		case UETypeFuturesOrderUpdate:
+			subEvent := new(WsUserDataFuturesOrderUpdateEvent)
+			if err := json.Unmarshal(message, subEvent); err != nil {
+				errHandler(fmt.Errorf("WsUserDataFuturesOrderUpdateEvent: %v: %s", err, message))
+				return
+			}
+			event.FuturesOrderUpdateEvent = subEvent
+
 		}
 
 		handler(event)
