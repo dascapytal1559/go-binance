@@ -207,16 +207,16 @@ type WsUserDataMarginOrderUpdateEvent struct {
 	SelfTradePreventionMode string                  `json:"V"` // selfTradePreventionMode
 
 	//These are fields that appear in the payload only if certain conditions are met.
-	TrailingDelta         int64  `json:"d"` // Trailing Delta; This is only visible if the order was a trailing stop order.
-	TrailingTime          int64  `json:"D"` // Trailing Time; This is only visible if the trailing stop order has been activated.
-	StrategyId            int64  `json:"j"` // Strategy ID; This is only visible if the strategyId parameter was provided upon order placement
-	StrategyType          int64  `json:"J"` // Strategy Type; This is only visible if the strategyType parameter was provided upon order placement
-	PreventedMatchId      int64  `json:"v"` // Prevented Match Id; This is only visible if the order expire due to STP trigger.
-	PreventedQuantity     string `json:"A"` // Prevented Quantity; This is only visible if the order expired due to STP trigger.
-	LastPreventedQuantity string `json:"B"` // Last Prevented Quantity; This is only visible if the order expired due to STP trigger.
-	WorkingTime           int64  `json:"W"` // Working Time; This is only visible if the order has been placed on the book.
-	TradeGroupId          int64  `json:"u"` // TradeGroupId; This is only visible if the account is part of a trade group and the order expired due to STP trigger.
-	CounterOrderId        int64  `json:"U"` // CounterOrderId; This is only visible if the order expired due to STP trigger.
+	TrailingDelta         int64  `json:"d|omitempty"` // Trailing Delta; This is only visible if the order was a trailing stop order.
+	TrailingTime          int64  `json:"D|omitempty"` // Trailing Time; This is only visible if the trailing stop order has been activated.
+	StrategyId            int64  `json:"j|omitempty"` // Strategy ID; This is only visible if the strategyId parameter was provided upon order placement
+	StrategyType          int64  `json:"J|omitempty"` // Strategy Type; This is only visible if the strategyType parameter was provided upon order placement
+	PreventedMatchId      int64  `json:"v|omitempty"` // Prevented Match Id; This is only visible if the order expire due to STP trigger.
+	PreventedQuantity     string `json:"A|omitempty"` // Prevented Quantity; This is only visible if the order expired due to STP trigger.
+	LastPreventedQuantity string `json:"B|omitempty"` // Last Prevented Quantity; This is only visible if the order expired due to STP trigger.
+	WorkingTime           int64  `json:"W|omitempty"` // Working Time; This is only visible if the order has been placed on the book.
+	TradeGroupId          int64  `json:"u|omitempty"` // TradeGroupId; This is only visible if the account is part of a trade group and the order expired due to STP trigger.
+	CounterOrderId        int64  `json:"U|omitempty"` // CounterOrderId; This is only visible if the order expired due to STP trigger.
 }
 
 type WsUserDataEvent struct {
