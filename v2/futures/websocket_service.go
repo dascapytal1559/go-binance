@@ -721,7 +721,7 @@ func getDepthCombinedEndpoint(symbolLevelsRates [][]string) (string, error) {
 			return "", err
 		}
 
-		streamNames[i+1] = partialEndpoint
+		streamNames[i] = partialEndpoint
 	}
 
 	return getCombinedEndpoint() + strings.Join(streamNames, "/"), nil
