@@ -666,15 +666,15 @@ func WsAllLiquidationOrderServe(handler WsLiquidationOrderHandler, errHandler Er
 
 // WsDepthEvent Partial and Diff. depth event
 type WsDepthEvent struct {
-	Event            string `json:"e"`
-	Time             int64  `json:"E"`
-	TransactionTime  int64  `json:"T"`
-	Symbol           string `json:"s"`
-	FirstUpdateID    int64  `json:"U"`
-	LastUpdateID     int64  `json:"u"`
-	PrevLastUpdateID int64  `json:"pu"`
-	Bids             []Bid  `json:"b"`
-	Asks             []Ask  `json:"a"`
+	Event            string     `json:"e"`
+	Time             int64      `json:"E"`
+	TransactionTime  int64      `json:"T"`
+	Symbol           string     `json:"s"`
+	FirstUpdateID    int64      `json:"U"`
+	LastUpdateID     int64      `json:"u"`
+	PrevLastUpdateID int64      `json:"pu"`
+	Bids             [][]string `json:"b"`
+	Asks             [][]string `json:"a"`
 }
 
 // WsDepthHandler Partial and Diff. depth stream handler
