@@ -1,6 +1,7 @@
 package futures
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/url"
 	"time"
@@ -81,6 +82,39 @@ var wsServe = func(cfg *WsConfig, handler WsHandler, errHandler ErrHandler) (don
 		}
 	}()
 	return
+}
+
+// handles common unmarshalling
+func wsServeCommon[T any](cfg *WsConfig, combined bool, eventHandler func(*T), errHandler ErrHandler) (
+	doneC, stopC chan struct{}, err error,
+) {
+	return wsServe(cfg,
+		func(message []byte) {
+			var event T
+			if combined {
+				type combinedWrapper struct {
+					Stream string `json:"stream"`
+					Data   T      `json:"data"`
+				}
+				wrapper := new(combinedWrapper)
+				err := json.Unmarshal(message, wrapper)
+				if err != nil {
+					errHandler(err)
+					return
+				}
+				event = wrapper.Data
+			} else {
+				err := json.Unmarshal(message, &event)
+				if err != nil {
+					errHandler(err)
+					return
+				}
+			}
+
+			eventHandler(&event)
+		},
+		errHandler,
+	)
 }
 
 func keepAlive(c *websocket.Conn, timeout time.Duration) {
