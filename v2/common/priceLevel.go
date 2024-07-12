@@ -23,3 +23,14 @@ func (p *PriceLevel) Parse() (float64, float64, error) {
 	}
 	return price, quantity, nil
 }
+
+func JsonToLevels(j [][]string) []PriceLevel {
+	levels := make([]PriceLevel, len(j))
+	for i, v := range j {
+		levels[i] = PriceLevel{
+			Price:    v[0],
+			Quantity: v[1],
+		}
+	}
+	return levels
+}

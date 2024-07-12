@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/adshao/go-binance/v2/common"
 )
 
 // Endpoints
@@ -665,16 +667,17 @@ func WsAllLiquidationOrderServe(handler WsLiquidationOrderHandler, errHandler Er
 }
 
 // WsDepthEvent Partial and Diff. depth event
+
 type WsDepthEvent struct {
-	Event            string     `json:"e"`
-	Time             int64      `json:"E"`
-	TransactionTime  int64      `json:"T"`
-	Symbol           string     `json:"s"`
-	FirstUpdateID    int64      `json:"U"`
-	LastUpdateID     int64      `json:"u"`
-	PrevLastUpdateID int64      `json:"pu"`
-	Bids             [][]string `json:"b"`
-	Asks             [][]string `json:"a"`
+	Event            string `json:"e"`
+	Time             int64  `json:"E"`
+	TransactionTime  int64  `json:"T"`
+	Symbol           string `json:"s"`
+	FirstUpdateID    int64  `json:"U"`
+	LastUpdateID     int64  `json:"u"`
+	PrevLastUpdateID int64  `json:"pu"`
+	Bids             []Ask  `json:"b"`
+	Asks             []Bid  `json:"a"`
 }
 
 // WsDepthHandler Partial and Diff. depth stream handler
@@ -730,7 +733,55 @@ func getDepthCombinedEndpoint(symbolLevelsRates [][]string) (string, error) {
 // wsDepthServe Partial and Diff. depth handler
 func wsDepthServe(endpoint string, combined bool, handler WsDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
 	cfg := newWsConfig(endpoint)
-	return wsServeCommon(cfg, combined, handler, errHandler)
+	return wsServe(cfg,
+		func(message []byte) {
+			type receive struct {
+				Event            string     `json:"e"`
+				Time             int64      `json:"E"`
+				TransactionTime  int64      `json:"T"`
+				Symbol           string     `json:"s"`
+				FirstUpdateID    int64      `json:"U"`
+				LastUpdateID     int64      `json:"u"`
+				PrevLastUpdateID int64      `json:"pu"`
+				Bids             [][]string `json:"b"`
+				Asks             [][]string `json:"a"`
+			}
+
+			var received receive
+			if combined {
+				type combinedWrapper struct {
+					Stream string  `json:"stream"`
+					Data   receive `json:"data"`
+				}
+				wrapper := new(combinedWrapper)
+				err := json.Unmarshal(message, wrapper)
+				if err != nil {
+					errHandler(err)
+					return
+				}
+				received = wrapper.Data
+			} else {
+				err := json.Unmarshal(message, &received)
+				if err != nil {
+					errHandler(err)
+					return
+				}
+			}
+
+			handler(&WsDepthEvent{
+				Event:            received.Event,
+				Time:             received.Time,
+				TransactionTime:  received.TransactionTime,
+				Symbol:           received.Symbol,
+				FirstUpdateID:    received.FirstUpdateID,
+				LastUpdateID:     received.LastUpdateID,
+				PrevLastUpdateID: received.PrevLastUpdateID,
+				Bids:             common.JsonToLevels(received.Bids),
+				Asks:             common.JsonToLevels(received.Asks),
+			})
+		},
+		errHandler,
+	)
 }
 
 // WsPartialDepthServe serve websocket partial depth handler with a symbol
