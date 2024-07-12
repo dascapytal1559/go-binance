@@ -595,7 +595,7 @@ func WsCombinedBookTickerServe(symbols []string, handler WsBookTickerHandler, er
 	}
 
 	cfg := newWsConfig(endpoint)
-	return wsServeCommon(cfg, false, handler, errHandler)
+	return wsServeCommon(cfg, true, handler, errHandler)
 }
 
 // WsAllBookTickerServe serve websocket that pushes updates to the best bid or ask price or quantity in real-time for all symbols.
