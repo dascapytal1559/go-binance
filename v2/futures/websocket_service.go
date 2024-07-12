@@ -581,32 +581,28 @@ type WsBookTickerHandler func(event *WsBookTickerEvent)
 func WsBookTickerServe(symbol string, handler WsBookTickerHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
 	endpoint := fmt.Sprintf("%s/%s@bookTicker", getWsEndpoint(), strings.ToLower(symbol))
 	cfg := newWsConfig(endpoint)
-	wsHandler := func(message []byte) {
-		event := new(WsBookTickerEvent)
-		err := json.Unmarshal(message, &event)
-		if err != nil {
-			errHandler(err)
-			return
+	return wsServeCommon(cfg, false, handler, errHandler)
+}
+
+// WsBookTickerServe serve websocket that pushes updates to the best bid or ask price or quantity in real-time for a specified symbol.
+func WsCombinedBookTickerServe(symbols []string, handler WsBookTickerHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
+	endpoint := getCombinedEndpoint()
+	for i, s := range symbols {
+		if i > 0 {
+			endpoint += "/"
 		}
-		handler(event)
+		endpoint += fmt.Sprintf("%s@bookTicker", strings.ToLower(s))
 	}
-	return wsServe(cfg, wsHandler, errHandler)
+
+	cfg := newWsConfig(endpoint)
+	return wsServeCommon(cfg, false, handler, errHandler)
 }
 
 // WsAllBookTickerServe serve websocket that pushes updates to the best bid or ask price or quantity in real-time for all symbols.
 func WsAllBookTickerServe(handler WsBookTickerHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
 	endpoint := fmt.Sprintf("%s/!bookTicker", getWsEndpoint())
 	cfg := newWsConfig(endpoint)
-	wsHandler := func(message []byte) {
-		event := new(WsBookTickerEvent)
-		err := json.Unmarshal(message, &event)
-		if err != nil {
-			errHandler(err)
-			return
-		}
-		handler(event)
-	}
-	return wsServe(cfg, wsHandler, errHandler)
+	return wsServeCommon(cfg, false, handler, errHandler)
 }
 
 // WsLiquidationOrderEvent define websocket liquidation order event.
