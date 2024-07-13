@@ -1,4 +1,4 @@
-package portfolio_margin
+package pmargin
 
 import (
 	"fmt"
