@@ -37,9 +37,9 @@ func deref(v interface{}) interface{} {
 	// }
 	val := reflect.ValueOf(v)
 	if val.Kind() == reflect.Ptr {
-		// if val.IsNil() {
-		// 	return nil
-		// }
+		if val.IsNil() {
+			panic(fmt.Sprintf("val.IsNil: %v - %v", v, val))
+		}
 		return val.Elem().Interface()
 	}
 	return v
