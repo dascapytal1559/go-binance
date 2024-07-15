@@ -42,7 +42,9 @@ func (r *request) setParam(key string, value interface{}) *request {
 // setParams set params with key/values to query string
 func (r *request) setParams(m params) *request {
 	for k, v := range m {
-		r.setParam(k, v)
+		if v != nil {
+			r.setParam(k, v)
+		}
 	}
 	return r
 }
