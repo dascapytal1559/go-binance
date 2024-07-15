@@ -31,17 +31,18 @@ type request struct {
 	fullURL    string
 }
 
-func deref(input interface{}) interface{} {
-	v := reflect.ValueOf(input)
-
-	// Check if input is a pointer
-	if v.Kind() == reflect.Ptr {
-		// Return the dereferenced value
-		return v.Elem().Interface()
+func deref(v interface{}) interface{} {
+	// if v == nil {
+	// 	return nil
+	// }
+	val := reflect.ValueOf(v)
+	if val.Kind() == reflect.Ptr {
+		// if val.IsNil() {
+		// 	return nil
+		// }
+		return val.Elem().Interface()
 	}
-
-	// Return the value itself if it's not a pointer
-	return input
+	return v
 }
 
 // setParam set param with key/value to query string
@@ -49,16 +50,16 @@ func (r *request) setParam(key string, value interface{}) *request {
 	if r.query == nil {
 		r.query = url.Values{}
 	}
-	r.query.Set(key, fmt.Sprintf("%v", deref(value)))
+	if value != nil {
+		r.query.Set(key, fmt.Sprintf("%v", deref(value)))
+	}
 	return r
 }
 
 // setParams set params with key/values to query string
 func (r *request) setParams(m params) *request {
 	for k, v := range m {
-		if v != nil {
-			r.setParam(k, v)
-		}
+		r.setParam(k, v)
 	}
 	return r
 }
@@ -68,7 +69,9 @@ func (r *request) setFormParam(key string, value interface{}) *request {
 	if r.form == nil {
 		r.form = url.Values{}
 	}
-	r.form.Set(key, fmt.Sprintf("%v", deref(value)))
+	if value != nil {
+		r.form.Set(key, fmt.Sprintf("%v", deref(value)))
+	}
 	return r
 }
 
