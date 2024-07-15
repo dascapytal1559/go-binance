@@ -32,7 +32,7 @@ type UMQueryOrderResponse struct {
 }
 
 // QueryUMOrder list opened orders
-type QueryUMOrder struct {
+type QueryUMOrderService struct {
 	c                 *Client
 	symbol            string
 	orderId           *int64
@@ -40,25 +40,25 @@ type QueryUMOrder struct {
 }
 
 // Symbol set symbol
-func (s *QueryUMOrder) Symbol(symbol string) *QueryUMOrder {
+func (s *QueryUMOrderService) Symbol(symbol string) *QueryUMOrderService {
 	s.symbol = symbol
 	return s
 }
 
 // OrderID set orderID
-func (s *QueryUMOrder) OrderID(orderId int64) *QueryUMOrder {
+func (s *QueryUMOrderService) OrderID(orderId int64) *QueryUMOrderService {
 	s.orderId = &orderId
 	return s
 }
 
 // OrigClientOrderID set origClientOrderID
-func (s *QueryUMOrder) OrigClientOrderID(origClientOrderId string) *QueryUMOrder {
+func (s *QueryUMOrderService) OrigClientOrderID(origClientOrderId string) *QueryUMOrderService {
 	s.origClientOrderId = &origClientOrderId
 	return s
 }
 
 // Do send request
-func (s *QueryUMOrder) Do(ctx context.Context, opts ...RequestOption) (res *UMQueryOrderResponse, err error) {
+func (s *QueryUMOrderService) Do(ctx context.Context, opts ...RequestOption) (res *UMQueryOrderResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
 		endpoint: "/papi/v1/um/order",

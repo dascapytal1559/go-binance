@@ -257,6 +257,11 @@ func (c *Client) NewCancelUMOrderService() *CancelUMOrderService {
 	return &CancelUMOrderService{c: c}
 }
 
+// NewQueryUMOrderService init querying UM order service
+func (c *Client) NewQueryUMOrderService() *QueryUMOrderService {
+	return &QueryUMOrderService{c: c}
+}
+
 // NewListUMOpenOrdersService init list UM open orders service
 func (c *Client) NewListUMOpenOrdersService() *ListUMOpenOrdersService {
 	return &ListUMOpenOrdersService{c: c}
