@@ -247,6 +247,16 @@ func (c *Client) NewGetUMAccountService() *GetUMAccountService {
 	return &GetUMAccountService{c: c}
 }
 
+// NewCreateUMOrderService init creating UM order service
+func (c *Client) NewCreateUMOrderService() *CreateUMOrderService {
+	return &CreateUMOrderService{c: c}
+}
+
+// NewCancelUMOrderService init canceling UM order service
+func (c *Client) NewCancelUMOrderService() *CancelUMOrderService {
+	return &CancelUMOrderService{c: c}
+}
+
 // NewListUMOpenOrdersService init list UM open orders service
 func (c *Client) NewListUMOpenOrdersService() *ListUMOpenOrdersService {
 	return &ListUMOpenOrdersService{c: c}
