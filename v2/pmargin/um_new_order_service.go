@@ -140,7 +140,7 @@ type CreateUMOrderResponse struct {
 	OrigQty                 string                   `json:"origQty"`
 	Price                   string                   `json:"price"`
 	ReduceOnly              bool                     `json:"reduceOnly"`
-	Side                    string                   `json:"side"`
+	Side                    futures.SideType         `json:"side"`
 	PositionSide            futures.PositionSideType `json:"positionSide"`
 	Status                  futures.OrderStatusType  `json:"status"`
 	Symbol                  string                   `json:"symbol"`
