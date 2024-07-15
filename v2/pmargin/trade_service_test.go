@@ -14,8 +14,7 @@ var client = NewClient(
 )
 
 func TestTradeServiceHistorical(t *testing.T) {
-	tradeService := &HistoricalTradesService{c: client}
-	trades, err := tradeService.Symbol("1000PEPEUSDT").FromID(0).Do(context.TODO())
+	trades, err := client.NewHistoricalTradesService().FromID(0).Do(context.TODO())
 
 	assert.Nil(t, err)
 	assert.NotNil(t, trades)

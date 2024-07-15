@@ -77,3 +77,8 @@ func (s *HistoricalTradesService) Do(ctx context.Context, opts ...RequestOption)
 	}
 	return
 }
+
+// NewHistoricalTradesService init account trade list service
+func (c *Client) NewHistoricalTradesService() *HistoricalTradesService {
+	return &HistoricalTradesService{c: c}
+}
