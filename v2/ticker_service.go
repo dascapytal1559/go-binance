@@ -10,13 +10,13 @@ import (
 // ListBookTickersService list best price/qty on the order book for a symbol or symbols
 type ListBookTickersService struct {
 	c       *Client
-	symbol  string
+	symbol  *string
 	symbols []string
 }
 
 // Symbol set symbol
 func (s *ListBookTickersService) Symbol(symbol string) *ListBookTickersService {
-	s.symbol = symbol
+	s.symbol = &symbol
 	return s
 }
 
@@ -32,13 +32,11 @@ func (s *ListBookTickersService) Do(ctx context.Context, opts ...RequestOption) 
 		method:   http.MethodGet,
 		endpoint: "/api/v3/ticker/bookTicker",
 	}
-
-	if len(s.symbols) > 0 {
+	if s.symbol != nil {
+		r.setParam("symbol", *s.symbol)
+	} else if s.symbols != nil {
 		r.setParam("symbols", s.symbols)
-	} else if s.symbol != "" {
-		r.setParam("symbol", s.symbol)
 	}
-
 	data, err := s.c.callAPI(ctx, r, opts...)
 	data = common.ToJSONList(data)
 	if err != nil {
@@ -64,19 +62,13 @@ type BookTicker struct {
 // ListPricesService list latest price for a symbol or symbols
 type ListPricesService struct {
 	c       *Client
-	symbol  string
+	symbol  *string
 	symbols []string
 }
 
 // Symbol set symbol
 func (s *ListPricesService) Symbol(symbol string) *ListPricesService {
-	s.symbol = symbol
-	return s
-}
-
-// Symbols set symbols
-func (s *ListPricesService) Symbols(symbols []string) *ListPricesService {
-	s.symbols = symbols
+	s.symbol = &symbol
 	return s
 }
 
@@ -86,13 +78,12 @@ func (s *ListPricesService) Do(ctx context.Context, opts ...RequestOption) (res 
 		method:   http.MethodGet,
 		endpoint: "/api/v3/ticker/price",
 	}
-
-	if len(s.symbols) > 0 {
-		r.setParam("symbols", s.symbols)
-	} else if s.symbol != "" {
-		r.setParam("symbol", s.symbol)
+	if s.symbol != nil {
+		r.setParam("symbol", *s.symbol)
+	} else if s.symbols != nil {
+		s, _ := json.Marshal(s.symbols)
+		r.setParam("symbols", string(s))
 	}
-
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return []*SymbolPrice{}, err
@@ -115,18 +106,24 @@ type SymbolPrice struct {
 // ListPriceChangeStatsService show stats of price change in last 24 hours for all symbols
 type ListPriceChangeStatsService struct {
 	c       *Client
-	symbol  string
+	symbol  *string
 	symbols []string
 }
 
 // Symbol set symbol
 func (s *ListPriceChangeStatsService) Symbol(symbol string) *ListPriceChangeStatsService {
-	s.symbol = symbol
+	s.symbol = &symbol
 	return s
 }
 
 // Symbols set symbols
 func (s *ListPriceChangeStatsService) Symbols(symbols []string) *ListPriceChangeStatsService {
+	s.symbols = symbols
+	return s
+}
+
+// Symbols set symbols
+func (s *ListPricesService) Symbols(symbols []string) *ListPricesService {
 	s.symbols = symbols
 	return s
 }
@@ -138,10 +135,10 @@ func (s *ListPriceChangeStatsService) Do(ctx context.Context, opts ...RequestOpt
 		endpoint: "/api/v3/ticker/24hr",
 	}
 
-	if len(s.symbols) > 0 {
+	if s.symbol != nil {
+		r.setParam("symbol", *s.symbol)
+	} else if s.symbols != nil {
 		r.setParam("symbols", s.symbols)
-	} else if s.symbol != "" {
-		r.setParam("symbol", s.symbol)
 	}
 
 	data, err := s.c.callAPI(ctx, r, opts...)
@@ -221,9 +218,9 @@ type AvgPrice struct {
 
 type ListSymbolTickerService struct {
 	c          *Client
-	symbol     string
+	symbol     *string
 	symbols    []string
-	windowSize string
+	windowSize *string
 }
 
 type SymbolTicker struct {
@@ -245,7 +242,7 @@ type SymbolTicker struct {
 }
 
 func (s *ListSymbolTickerService) Symbol(symbol string) *ListSymbolTickerService {
-	s.symbol = symbol
+	s.symbol = &symbol
 	return s
 }
 
@@ -268,7 +265,7 @@ func (s *ListSymbolTickerService) Symbols(symbols []string) *ListSymbolTickerSer
 //
 // Reference: https://binance-docs.github.io/apidocs/spot/en/#rolling-window-price-change-statistics
 func (s *ListSymbolTickerService) WindowSize(windowSize string) *ListSymbolTickerService {
-	s.windowSize = windowSize
+	s.windowSize = &windowSize
 	return s
 }
 
@@ -277,15 +274,15 @@ func (s *ListSymbolTickerService) Do(ctx context.Context, opts ...RequestOption)
 		method:   http.MethodGet,
 		endpoint: "/api/v3/ticker",
 	}
-
-	if len(s.symbols) > 0 {
-		r.setParam("symbols", s.symbols)
-	} else if s.symbol != "" {
-		r.setParam("symbol", s.symbol)
+	if s.symbol != nil {
+		r.setParam("symbol", *s.symbol)
+	} else if s.symbols != nil {
+		s, _ := json.Marshal(s.symbols)
+		r.setParam("symbols", string(s))
 	}
 
-	if s.windowSize != "" {
-		r.setParam("windowSize", s.windowSize)
+	if s.windowSize != nil {
+		r.setParam("windowSize", *s.windowSize)
 	}
 
 	data, err := s.c.callAPI(ctx, r, opts...)

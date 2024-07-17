@@ -150,17 +150,6 @@ func WsCombinedPartialDepthServe(symbolLevels map[string]string, handler WsParti
 	return wsServe(cfg, wsHandler, errHandler)
 }
 
-// WsDepthEvent define websocket depth event
-type WsDepthEvent struct {
-	Event         string `json:"e"`
-	Time          int64  `json:"E"`
-	Symbol        string `json:"s"`
-	LastUpdateID  int64  `json:"u"`
-	FirstUpdateID int64  `json:"U"`
-	Bids          []Bid  `json:"b"`
-	Asks          []Ask  `json:"a"`
-}
-
 // WsDepthHandler handle websocket depth event
 type WsDepthHandler func(event *WsDepthEvent)
 
@@ -212,6 +201,17 @@ func wsDepthServe(endpoint string, handler WsDepthHandler, errHandler ErrHandler
 		handler(event)
 	}
 	return wsServe(cfg, wsHandler, errHandler)
+}
+
+// WsDepthEvent define websocket depth event
+type WsDepthEvent struct {
+	Event         string `json:"e"`
+	Time          int64  `json:"E"`
+	Symbol        string `json:"s"`
+	LastUpdateID  int64  `json:"u"`
+	FirstUpdateID int64  `json:"U"`
+	Bids          []Bid  `json:"b"`
+	Asks          []Ask  `json:"a"`
 }
 
 // WsCombinedDepthServe is similar to WsDepthServe, but it for multiple symbols
