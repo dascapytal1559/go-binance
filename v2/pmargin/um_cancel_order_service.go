@@ -8,6 +8,11 @@ import (
 	"github.com/adshao/go-binance/v2/futures"
 )
 
+// NewCancelUMOrderService init canceling UM order service
+func (c *Client) NewCancelUMOrderService() *CancelUMOrderService {
+	return &CancelUMOrderService{c: c}
+}
+
 // CancelUMOrderService cancel an order
 type CancelUMOrderService struct {
 	c                 *Client
@@ -41,13 +46,11 @@ func (s *CancelUMOrderService) Do(ctx context.Context, opts ...RequestOption) (r
 		endpoint: "/papi/v1/um/order",
 		secType:  secTypeSigned,
 	}
-
 	r.setFormParams(params{
 		"symbol":            s.symbol,
 		"orderId":           s.orderID,
 		"origClientOrderId": s.origClientOrderID,
 	})
-
 	data, _, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err

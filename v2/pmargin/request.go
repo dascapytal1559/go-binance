@@ -31,24 +31,28 @@ type request struct {
 	fullURL    string
 }
 
+func setValue(values url.Values, k string, v interface{}) {
+	if v != nil {
+		rv := reflect.ValueOf(v)
+
+		if rv.Kind() == reflect.Ptr {
+			if rv.IsNil() {
+				return
+			} else {
+				rv = rv.Elem()
+			}
+		}
+
+		values.Set(k, fmt.Sprintf("%v", rv.Interface()))
+	}
+}
+
 // setParam set param with key/value to query string
 func (r *request) setParam(key string, value interface{}) *request {
 	if r.query == nil {
 		r.query = url.Values{}
 	}
-	if value != nil {
-		v := reflect.ValueOf(value)
-
-		if v.Kind() == reflect.Ptr {
-			if v.IsNil() {
-				return r
-			} else {
-				v = v.Elem()
-			}
-		}
-
-		r.query.Set(key, fmt.Sprintf("%v", v.Interface()))
-	}
+	setValue(r.query, key, value)
 	return r
 }
 
@@ -65,19 +69,7 @@ func (r *request) setFormParam(key string, value interface{}) *request {
 	if r.form == nil {
 		r.form = url.Values{}
 	}
-	if value != nil {
-		v := reflect.ValueOf(value)
-
-		if v.Kind() == reflect.Ptr {
-			if v.IsNil() {
-				return r
-			} else {
-				v = v.Elem()
-			}
-		}
-
-		r.form.Set(key, fmt.Sprintf("%v", v.Interface()))
-	}
+	setValue(r.form, key, value)
 	return r
 }
 

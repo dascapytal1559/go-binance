@@ -2,8 +2,14 @@ package pmargin
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 )
+
+// NewStartUserStreamService init starting user stream service
+func (c *Client) NewStartUserStreamService() *StartUserStreamService {
+	return &StartUserStreamService{c: c}
+}
 
 // StartUserStreamService create listen key for user stream service
 type StartUserStreamService struct {
@@ -21,12 +27,19 @@ func (s *StartUserStreamService) Do(ctx context.Context, opts ...RequestOption) 
 	if err != nil {
 		return "", err
 	}
-	j, err := newJSON(data)
+	var res struct {
+		ListenKey string `json:"listenKey"`
+	}
+	err = json.Unmarshal(data, &res)
 	if err != nil {
 		return "", err
 	}
-	listenKey = j.Get("listenKey").MustString()
-	return listenKey, nil
+	return res.ListenKey, nil
+}
+
+// NewKeepaliveUserStreamService init keep alive user stream service
+func (c *Client) NewKeepaliveUserStreamService() *KeepaliveUserStreamService {
+	return &KeepaliveUserStreamService{c: c}
 }
 
 // KeepaliveUserStreamService update listen key
@@ -48,9 +61,16 @@ func (s *KeepaliveUserStreamService) Do(ctx context.Context, opts ...RequestOpti
 		endpoint: "/papi/v1/listenKey",
 		secType:  secTypeSigned,
 	}
+
 	r.setFormParam("listenKey", s.listenKey)
+
 	_, _, err = s.c.callAPI(ctx, r, opts...)
 	return err
+}
+
+// NewCloseUserStreamService init closing user stream service
+func (c *Client) NewCloseUserStreamService() *CloseUserStreamService {
+	return &CloseUserStreamService{c: c}
 }
 
 // CloseUserStreamService delete listen key

@@ -8,6 +8,35 @@ import (
 	"github.com/adshao/go-binance/v2/futures"
 )
 
+// NewGetAccountService init getting account service
+func (c *Client) NewGetUMAccountService() *GetUMAccountService {
+	return &GetUMAccountService{c: c}
+}
+
+// GetAccountService get account info
+type GetUMAccountService struct {
+	c *Client
+}
+
+// Do send request
+func (s *GetUMAccountService) Do(ctx context.Context, opts ...RequestOption) (res *UMAccount, err error) {
+	r := &request{
+		method:   http.MethodGet,
+		endpoint: "/papi/v1/um/account",
+		secType:  secTypeSigned,
+	}
+	data, _, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+	res = new(UMAccount)
+	err = json.Unmarshal(data, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
 type UMAccount struct {
 	TradeGroupId int64               `json:"tradeGroupId"`
 	Assets       []UMAccountAsset    `json:"assets"`
@@ -41,28 +70,4 @@ type UMAccountPosition struct {
 	PositionAmt            string                   `json:"positionAmt"`
 	UpdateTime             int64                    `json:"updateTime"`
 	BreakEvenPrice         string                   `json:"breakEvenPrice"`
-}
-
-// GetAccountService get account info
-type GetUMAccountService struct {
-	c *Client
-}
-
-// Do send request
-func (s *GetUMAccountService) Do(ctx context.Context, opts ...RequestOption) (res *UMAccount, err error) {
-	r := &request{
-		method:   http.MethodGet,
-		endpoint: "/papi/v1/um/account",
-		secType:  secTypeSigned,
-	}
-	data, _, err := s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return nil, err
-	}
-	res = new(UMAccount)
-	err = json.Unmarshal(data, res)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
 }

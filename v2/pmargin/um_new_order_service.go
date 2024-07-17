@@ -8,6 +8,11 @@ import (
 	"github.com/adshao/go-binance/v2/futures"
 )
 
+// NewCreateUMOrderService init creating UM order service
+func (c *Client) NewCreateUMOrderService() *CreateUMOrderService {
+	return &CreateUMOrderService{c: c}
+}
+
 // CreateUMOrderService create order
 type CreateUMOrderService struct {
 	c                *Client
@@ -83,13 +88,13 @@ func (s *CreateUMOrderService) NewOrderResponseType(newOrderResponseType futures
 	return s
 }
 
-func (s *CreateUMOrderService) createOrder(ctx context.Context, endpoint string, opts ...RequestOption) (data []byte, header *http.Header, err error) {
+// Do send request
+func (s *CreateUMOrderService) Do(ctx context.Context, opts ...RequestOption) (res *CreateUMOrderResponse, err error) {
 	r := &request{
 		method:   http.MethodPost,
-		endpoint: endpoint,
+		endpoint: "/papi/v1/um/order",
 		secType:  secTypeSigned,
 	}
-
 	r.setFormParams(params{
 		"symbol":           s.symbol,
 		"side":             s.side,
@@ -102,30 +107,15 @@ func (s *CreateUMOrderService) createOrder(ctx context.Context, endpoint string,
 		"newClientOrderId": s.newClientOrderID,
 		"newOrderRespType": s.newOrderRespType,
 	})
-
-	data, header, err = s.c.callAPI(ctx, r, opts...)
-	if err != nil {
-		return []byte{}, &http.Header{}, err
-	}
-	return data, header, nil
-}
-
-// Do send request
-func (s *CreateUMOrderService) Do(ctx context.Context, opts ...RequestOption) (res *CreateUMOrderResponse, err error) {
-	data, header, err := s.createOrder(ctx, "/papi/v1/um/order", opts...)
+	data, _, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
 	}
-
 	res = new(CreateUMOrderResponse)
-
 	err = json.Unmarshal(data, res)
 	if err != nil {
 		return nil, err
 	}
-
-	res.RateLimitOrder10s = header.Get("X-Mbx-Order-Count-10s")
-	res.RateLimitOrder1m = header.Get("X-Mbx-Order-Count-1m")
 	return res, nil
 }
 
@@ -149,6 +139,4 @@ type CreateUMOrderResponse struct {
 	SelfTradePreventionMode string                   `json:"selfTradePreventionMode"`
 	GoodTillDate            int64                    `json:"goodTillDate"`
 	UpdateTime              int64                    `json:"updateTime"`
-	RateLimitOrder10s       string                   `json:"rateLimitOrder10s,omitempty"`
-	RateLimitOrder1m        string                   `json:"rateLimitOrder1m,omitempty"`
 }

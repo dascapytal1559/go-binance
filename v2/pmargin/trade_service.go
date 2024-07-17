@@ -6,23 +6,9 @@ import (
 	"net/http"
 )
 
-// TradeIndo
-type Trade struct {
-	Symbol          string `json:"symbol"`
-	ID              int64  `json:"id"`
-	OrderID         int64  `json:"orderId"`
-	Side            string `json:"side"`
-	Price           string `json:"price"`
-	Quantity        string `json:"qty"`
-	RealizedPnl     string `json:"realizedPnl"`
-	MarginAsset     string `json:"marginAsset"`
-	QuoteQty        string `json:"quoteQty"`
-	Commission      string `json:"commission"`
-	CommissionAsset string `json:"commissionAsset"`
-	Time            int64  `json:"time"`
-	Buyer           bool   `json:"buyer"`
-	Maker           bool   `json:"maker"`
-	PositionSide    string `json:"positionSide"`
+// NewHistoricalTradesService init account trade list service
+func (c *Client) NewHistoricalTradesService() *HistoricalTradesService {
+	return &HistoricalTradesService{c: c}
 }
 
 // HistoricalTradesService list aggregate trades
@@ -58,14 +44,11 @@ func (s *HistoricalTradesService) Do(ctx context.Context, opts ...RequestOption)
 		endpoint: "/papi/v1/um/userTrades",
 		secType:  secTypeSigned,
 	}
-	r.setParam("symbol", s.symbol)
-	if s.limit != nil {
-		r.setParam("limit", *s.limit)
-	}
-	if s.fromID != nil {
-		r.setParam("fromId", *s.fromID)
-	}
-
+	r.setParams(params{
+		"symbol": s.symbol,
+		"limit":  s.limit,
+		"fromId": s.fromID,
+	})
 	data, _, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return
@@ -78,7 +61,21 @@ func (s *HistoricalTradesService) Do(ctx context.Context, opts ...RequestOption)
 	return
 }
 
-// NewHistoricalTradesService init account trade list service
-func (c *Client) NewHistoricalTradesService() *HistoricalTradesService {
-	return &HistoricalTradesService{c: c}
+// TradeIndo
+type Trade struct {
+	Symbol          string `json:"symbol"`
+	ID              int64  `json:"id"`
+	OrderID         int64  `json:"orderId"`
+	Side            string `json:"side"`
+	Price           string `json:"price"`
+	Quantity        string `json:"qty"`
+	RealizedPnl     string `json:"realizedPnl"`
+	MarginAsset     string `json:"marginAsset"`
+	QuoteQty        string `json:"quoteQty"`
+	Commission      string `json:"commission"`
+	CommissionAsset string `json:"commissionAsset"`
+	Time            int64  `json:"time"`
+	Buyer           bool   `json:"buyer"`
+	Maker           bool   `json:"maker"`
+	PositionSide    string `json:"positionSide"`
 }

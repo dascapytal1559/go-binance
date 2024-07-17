@@ -6,14 +6,12 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"time"
-
-	"github.com/bitly/go-simplejson"
 
 	"github.com/adshao/go-binance/v2/common"
 )
@@ -32,14 +30,6 @@ const (
 
 func currentTimestamp() int64 {
 	return int64(time.Nanosecond) * time.Now().UnixNano() / int64(time.Millisecond)
-}
-
-func newJSON(data []byte) (j *simplejson.Json, err error) {
-	j, err = simplejson.NewJson(data)
-	if err != nil {
-		return nil, err
-	}
-	return j, nil
 }
 
 // getApiEndpoint return the base endpoint of the WS according the UseTestnet flag
@@ -191,7 +181,7 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 	if err != nil {
 		return []byte{}, &http.Header{}, err
 	}
-	data, err = ioutil.ReadAll(res.Body)
+	data, err = io.ReadAll(res.Body)
 	if err != nil {
 		return []byte{}, &http.Header{}, err
 	}
@@ -225,64 +215,4 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 func (c *Client) SetApiEndpoint(url string) *Client {
 	c.BaseURL = url
 	return c
-}
-
-// NewGetBalanceService init getting balance service
-func (c *Client) NewGetBalanceService() *GetBalanceService {
-	return &GetBalanceService{c: c}
-}
-
-// NewGetAccountService init getting account service
-func (c *Client) NewGetAccountService() *GetAccountService {
-	return &GetAccountService{c: c}
-}
-
-// NewListMarginOpenOrdersService init list margin open orders service
-func (c *Client) NewListMarginOpenOrdersService() *ListMarginOpenOrdersService {
-	return &ListMarginOpenOrdersService{c: c}
-}
-
-// NewGetAccountService init getting account service
-func (c *Client) NewGetUMAccountService() *GetUMAccountService {
-	return &GetUMAccountService{c: c}
-}
-
-// NewCreateUMOrderService init creating UM order service
-func (c *Client) NewCreateUMOrderService() *CreateUMOrderService {
-	return &CreateUMOrderService{c: c}
-}
-
-// NewCancelUMOrderService init canceling UM order service
-func (c *Client) NewCancelUMOrderService() *CancelUMOrderService {
-	return &CancelUMOrderService{c: c}
-}
-
-// NewQueryUMOrderService init querying UM order service
-func (c *Client) NewQueryUMOrderService() *QueryUMOrderService {
-	return &QueryUMOrderService{c: c}
-}
-
-// NewListUMOpenOrdersService init list UM open orders service
-func (c *Client) NewListUMOpenOrdersService() *ListUMOpenOrdersService {
-	return &ListUMOpenOrdersService{c: c}
-}
-
-// NewGetUMPositionRiskService init getting UM position risk service
-func (c *Client) NewGetUMPositionRiskService() *GetUMPositionRiskService {
-	return &GetUMPositionRiskService{c: c}
-}
-
-// NewStartUserStreamService init starting user stream service
-func (c *Client) NewStartUserStreamService() *StartUserStreamService {
-	return &StartUserStreamService{c: c}
-}
-
-// NewKeepaliveUserStreamService init keep alive user stream service
-func (c *Client) NewKeepaliveUserStreamService() *KeepaliveUserStreamService {
-	return &KeepaliveUserStreamService{c: c}
-}
-
-// NewCloseUserStreamService init closing user stream service
-func (c *Client) NewCloseUserStreamService() *CloseUserStreamService {
-	return &CloseUserStreamService{c: c}
 }
