@@ -543,7 +543,7 @@ type WsOrderUpdate struct {
 	FilledQuoteVolume       string          `json:"Z"` // the quote volume that already filled
 	LatestQuoteVolume       string          `json:"Y"` // the quote volume for the latest trade
 	QuoteVolume             string          `json:"Q"`
-	SelfTradePreventionMode string          `json:"V"`
+	SelfTradePreventionMode STPModeType     `json:"V"`
 
 	//These are fields that appear in the payload only if certain conditions are met.
 	TrailingDelta              int64  `json:"d"` // Appears only for trailing stop orders.

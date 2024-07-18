@@ -63,7 +63,7 @@ type MarginQueryOrderResponse struct {
 	Type                    binance.OrderType       `json:"type"`
 	UpdateTime              int64                   `json:"updateTime"`
 	AccountId               int64                   `json:"accountId"`
-	SelfTradePreventionMode string                  `json:"selfTradePreventionMode"`
+	SelfTradePreventionMode binance.STPModeType     `json:"selfTradePreventionMode"`
 	PreventedMatchId        int64                   `json:"preventedMatchId"`
 	PreventedQuantity       string                  `json:"preventedQuantity"`
 }
