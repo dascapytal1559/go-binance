@@ -74,9 +74,9 @@ func (s *CancelMarginOrderService) Do(ctx context.Context, opts ...RequestOption
 // OrderResponse define order info
 type CancelMarginOrderResponse struct {
 	Symbol                  string                  `json:"symbol"`
-	OrderID                 int64                   `json:"orderId"`
-	OrigClientOrderID       string                  `json:"origClientOrderId"`
-	ClientOrderID           string                  `json:"clientOrderId"`
+	OrderId                 int64                   `json:"orderId"`
+	OrigClientOrderId       string                  `json:"origClientOrderId"`
+	ClientOrderId           string                  `json:"clientOrderId"`
 	Price                   string                  `json:"price"`
 	OrigQty                 string                  `json:"origQty"`
 	ExecutedQty             string                  `json:"executedQty"`

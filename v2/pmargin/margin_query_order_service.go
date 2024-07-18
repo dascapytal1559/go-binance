@@ -46,12 +46,12 @@ func (s *ListMarginOpenOrdersService) Do(ctx context.Context, opts ...RequestOpt
 }
 
 type MarginQueryOrderResponse struct {
-	ClientOrderID           string                  `json:"clientOrderId"`
+	ClientOrderId           string                  `json:"clientOrderId"`
 	CumulativeQuoteQuantity string                  `json:"cummulativeQuoteQty"`
 	ExecutedQuantity        string                  `json:"executedQty"`
 	IcebergQuantity         string                  `json:"icebergQty"`
 	IsWorking               bool                    `json:"isWorking"`
-	OrderID                 int64                   `json:"orderId"`
+	OrderId                 int64                   `json:"orderId"`
 	OriginalQuantity        string                  `json:"origQty"`
 	Price                   string                  `json:"price"`
 	Side                    binance.SideType        `json:"side"`

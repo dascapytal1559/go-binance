@@ -154,8 +154,8 @@ func (s *CreateMarginOrderService) Do(ctx context.Context, opts ...RequestOption
 // OrderResponse define order info
 type CreateMarginOrderResponse struct {
 	Symbol                  string                  `json:"symbol"`
-	OrderID                 int64                   `json:"orderId"`
-	ClientOrderID           string                  `json:"clientOrderId"`
+	OrderId                 int64                   `json:"orderId"`
+	ClientOrderId           string                  `json:"clientOrderId"`
 	TransactTime            int64                   `json:"transactTime"`
 	Price                   string                  `json:"price"`
 	SelfTradePreventionMode binance.STPModeType     `json:"selfTradePreventionMode"`
