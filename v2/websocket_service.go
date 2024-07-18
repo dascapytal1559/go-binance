@@ -107,12 +107,7 @@ func wsPartialDepthServe(endpoint string, symbol string, handler WsPartialDepthH
 }
 
 // WsCombinedPartialDepthServe is similar to WsPartialDepthServe, but it for multiple symbols
-func WsCombinedPartialDepthServe(symbolLevels map[string]string, handler WsPartialDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	endpoint := getCombinedEndpoint()
-	for s, l := range symbolLevels {
-		endpoint += fmt.Sprintf("%s@depth%s", strings.ToLower(s), l) + "/"
-	}
-	endpoint = endpoint[:len(endpoint)-1]
+func wsCombinedPartialDepthServe(endpoint string, handler WsPartialDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
 	cfg := newWsConfig(endpoint)
 	wsHandler := func(message []byte) {
 		j, err := newJSON(message)
@@ -148,6 +143,26 @@ func WsCombinedPartialDepthServe(symbolLevels map[string]string, handler WsParti
 		handler(event)
 	}
 	return wsServe(cfg, wsHandler, errHandler)
+}
+
+// WsCombinedPartialDepthServe is similar to WsPartialDepthServe, but it for multiple symbols
+func WsCombinedPartialDepthServe(symbolLevels map[string]string, handler WsPartialDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
+	endpoint := getCombinedEndpoint()
+	for s, l := range symbolLevels {
+		endpoint += fmt.Sprintf("%s@depth%s", strings.ToLower(s), l) + "/"
+	}
+	endpoint = endpoint[:len(endpoint)-1]
+	return wsCombinedPartialDepthServe(endpoint, handler, errHandler)
+}
+
+// WsCombinedPartialDepthServe is similar to WsPartialDepthServe, but it for multiple symbols,  using 100ms updates
+func WsCombinedPartialDepthServe100Ms(symbolLevels map[string]string, handler WsPartialDepthHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
+	endpoint := getCombinedEndpoint()
+	for s, l := range symbolLevels {
+		endpoint += fmt.Sprintf("%s@depth%s@100ms", strings.ToLower(s), l) + "/"
+	}
+	endpoint = endpoint[:len(endpoint)-1]
+	return wsCombinedPartialDepthServe(endpoint, handler, errHandler)
 }
 
 // WsDepthHandler handle websocket depth event
