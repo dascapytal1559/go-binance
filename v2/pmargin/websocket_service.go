@@ -105,39 +105,39 @@ type WsUserDataMarginOpenOrderLossUpdateEvent struct {
 }
 
 type WsUserDataMarginOrderUpdateEvent struct {
-	Event                   UserDataEventType                   `json:"e"` // Event type
-	Time                    int64                               `json:"E"` // Event time
-	Symbol                  string                              `json:"s"` // Symbol
-	ClientOrderId           string                              `json:"c"` // Client order ID
-	Side                    binance.SideType                    `json:"S"` // Side
-	Type                    binance.OrderType                   `json:"o"` // Order type
-	TimeInForce             binance.TimeInForceType             `json:"f"` // Time in force
-	Quantity                string                              `json:"q"` // Order quantity
-	Price                   string                              `json:"p"` // Order price
-	StopPrice               string                              `json:"P"` // Stop price
-	IcebergQuantity         string                              `json:"F"` // Iceberg quantity
-	OrderListId             int64                               `json:"g"` // OrderListId
-	OrigCustomOrderId       string                              `json:"C"` // Original client order ID; This is the ID of the order being canceled
-	ExecutionType           binance.OrderStatusType             `json:"x"` /// Current execution type
-	Status                  binance.OrderStatusType             `json:"X"` // Current order status
-	RejectReason            string                              `json:"r"` // Order reject reason; will be an error code.
-	Id                      int64                               `json:"i"` // Order ID
-	LatestVolume            string                              `json:"l"` // Last executed quantity
-	FilledVolume            string                              `json:"z"` // Cumulative filled quantity
-	LatestPrice             string                              `json:"L"` // Last executed price
-	FeeAsset                string                              `json:"N"` // Commission asset
-	FeeCost                 string                              `json:"n"` // Commission amount
-	TransactionTime         int64                               `json:"T"` // Transaction time
-	TradeId                 int64                               `json:"t"` // Trade ID
-	IgnoreI                 int64                               `json:"I"` // Ignore
-	IsInOrderBook           bool                                `json:"w"` // Is the order on the book?
-	IsMaker                 bool                                `json:"m"` // Is this trade the maker side?
-	IgnoreM                 bool                                `json:"M"` // Ignore
-	CreateTime              int64                               `json:"O"` // Order creation time
-	FilledQuoteVolume       string                              `json:"Z"` // Cumulative quote asset transacted quantity
-	LatestQuoteVolume       float64                             `json:"Y"` // Last quote asset transacted quantity (i.e. lastPrice * lastQty)
-	QuoteVolume             string                              `json:"Q"` // Quote Order Quantity
-	SelfTradePreventionMode binance.SelfTradePreventionModeType `json:"V"` // selfTradePreventionMode
+	Event                   UserDataEventType       `json:"e"` // Event type
+	Time                    int64                   `json:"E"` // Event time
+	Symbol                  string                  `json:"s"` // Symbol
+	ClientOrderId           string                  `json:"c"` // Client order ID
+	Side                    binance.SideType        `json:"S"` // Side
+	Type                    binance.OrderType       `json:"o"` // Order type
+	TimeInForce             binance.TimeInForceType `json:"f"` // Time in force
+	Quantity                string                  `json:"q"` // Order quantity
+	Price                   string                  `json:"p"` // Order price
+	StopPrice               string                  `json:"P"` // Stop price
+	IcebergQuantity         string                  `json:"F"` // Iceberg quantity
+	OrderListId             int64                   `json:"g"` // OrderListId
+	OrigCustomOrderId       string                  `json:"C"` // Original client order ID; This is the ID of the order being canceled
+	ExecutionType           binance.OrderStatusType `json:"x"` /// Current execution type
+	Status                  binance.OrderStatusType `json:"X"` // Current order status
+	RejectReason            string                  `json:"r"` // Order reject reason; will be an error code.
+	Id                      int64                   `json:"i"` // Order ID
+	LatestVolume            string                  `json:"l"` // Last executed quantity
+	FilledVolume            string                  `json:"z"` // Cumulative filled quantity
+	LatestPrice             string                  `json:"L"` // Last executed price
+	FeeAsset                string                  `json:"N"` // Commission asset
+	FeeCost                 string                  `json:"n"` // Commission amount
+	TransactionTime         int64                   `json:"T"` // Transaction time
+	TradeId                 int64                   `json:"t"` // Trade ID
+	IgnoreI                 int64                   `json:"I"` // Ignore
+	IsInOrderBook           bool                    `json:"w"` // Is the order on the book?
+	IsMaker                 bool                    `json:"m"` // Is this trade the maker side?
+	IgnoreM                 bool                    `json:"M"` // Ignore
+	CreateTime              int64                   `json:"O"` // Order creation time
+	FilledQuoteVolume       string                  `json:"Z"` // Cumulative quote asset transacted quantity
+	LatestQuoteVolume       float64                 `json:"Y"` // Last quote asset transacted quantity (i.e. lastPrice * lastQty)
+	QuoteVolume             string                  `json:"Q"` // Quote Order Quantity
+	SelfTradePreventionMode binance.STPModeType     `json:"V"` // selfTradePreventionMode
 
 	//These are fields that appear in the payload only if certain conditions are met.
 	TrailingDelta         int64  `json:"d,omitempty"` // Trailing Delta; This is only visible if the order was a trailing stop order.

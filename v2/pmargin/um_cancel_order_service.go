@@ -65,22 +65,22 @@ func (s *CancelUMOrderService) Do(ctx context.Context, opts ...RequestOption) (r
 
 // OrderResponse define order info
 type CancelUMOrderResponse struct {
-	AvgPrice                string                              `json:"avgPrice"`
-	ClientOrderId           string                              `json:"clientOrderId"`
-	CumQty                  string                              `json:"cumQty"`
-	CumQuote                string                              `json:"cumQuote"`
-	ExecutedQty             string                              `json:"executedQty"`
-	OrderId                 int64                               `json:"orderId"`
-	OrigQty                 string                              `json:"origQty"`
-	Price                   string                              `json:"price"`
-	ReduceOnly              bool                                `json:"reduceOnly"`
-	Side                    futures.SideType                    `json:"side"`
-	PositionSide            futures.PositionSideType            `json:"positionSide"`
-	Status                  futures.OrderStatusType             `json:"status"`
-	Symbol                  string                              `json:"symbol"`
-	TimeInForce             futures.TimeInForceType             `json:"timeInForce"`
-	Type                    futures.OrderType                   `json:"type"`
-	UpdateTime              int64                               `json:"updateTime"`
-	SelfTradePreventionMode futures.SelfTradePreventionModeType `json:"selfTradePreventionMode"`
-	GoodTillDate            int64                               `json:"goodTillDate"`
+	AvgPrice                string                   `json:"avgPrice"`
+	ClientOrderId           string                   `json:"clientOrderId"`
+	CumQty                  string                   `json:"cumQty"`
+	CumQuote                string                   `json:"cumQuote"`
+	ExecutedQty             string                   `json:"executedQty"`
+	OrderId                 int64                    `json:"orderId"`
+	OrigQty                 string                   `json:"origQty"`
+	Price                   string                   `json:"price"`
+	ReduceOnly              bool                     `json:"reduceOnly"`
+	Side                    futures.SideType         `json:"side"`
+	PositionSide            futures.PositionSideType `json:"positionSide"`
+	Status                  futures.OrderStatusType  `json:"status"`
+	Symbol                  string                   `json:"symbol"`
+	TimeInForce             futures.TimeInForceType  `json:"timeInForce"`
+	Type                    futures.OrderType        `json:"type"`
+	UpdateTime              int64                    `json:"updateTime"`
+	SelfTradePreventionMode futures.STPModeType      `json:"selfTradePreventionMode"`
+	GoodTillDate            int64                    `json:"goodTillDate"`
 }

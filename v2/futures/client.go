@@ -51,8 +51,8 @@ type SymbolFilterType string
 // SideEffectType define side effect type for orders
 type SideEffectType string
 
-// SelfTradePreventionModeType define self trade prevention mode type
-type SelfTradePreventionModeType string
+// STPModeType define self trade prevention mode type
+type STPModeType string
 
 // WorkingType define working type
 type WorkingType string
@@ -145,10 +145,10 @@ const (
 	SideEffectTypeMarginBuy    SideEffectType = "MARGIN_BUY"
 	SideEffectTypeAutoRepay    SideEffectType = "AUTO_REPAY"
 
-	SelfTradePreventionModeTypeNone        SelfTradePreventionModeType = "NONE"
-	SelfTradePreventionModeTypeExpireTaker SelfTradePreventionModeType = "EXPIRE_TAKER"
-	SelfTradePreventionModeTypeExpireMaker SelfTradePreventionModeType = "EXPIRE_MAKER"
-	SelfTradePreventionModeTypeExpireBoth  SelfTradePreventionModeType = "EXPIRE_BOTH"
+	STPModeTypeNone        STPModeType = "NONE"
+	STPModeTypeExpireTaker STPModeType = "EXPIRE_TAKER"
+	STPModeTypeExpireMaker STPModeType = "EXPIRE_MAKER"
+	STPModeTypeExpireBoth  STPModeType = "EXPIRE_BOTH"
 
 	MarginTypeIsolated MarginType = "ISOLATED"
 	MarginTypeCrossed  MarginType = "CROSSED"

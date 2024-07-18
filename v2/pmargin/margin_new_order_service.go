@@ -28,7 +28,7 @@ type CreateMarginOrderService struct {
 	icebergQty              *string
 	sideEffectType          *binance.SideEffectType
 	timeInForce             *binance.TimeInForceType
-	selfTradePreventionMode *binance.SelfTradePreventionModeType
+	selfTradePreventionMode *binance.STPModeType
 	autoRepayAtCancel       *bool
 }
 
@@ -105,7 +105,7 @@ func (s *CreateMarginOrderService) TimeInForce(timeInForce binance.TimeInForceTy
 }
 
 // SelfTradePreventionMode set selfTradePreventionMode
-func (s *CreateMarginOrderService) SelfTradePreventionMode(selfTradePreventionMode binance.SelfTradePreventionModeType) *CreateMarginOrderService {
+func (s *CreateMarginOrderService) SelfTradePreventionMode(selfTradePreventionMode binance.STPModeType) *CreateMarginOrderService {
 	s.selfTradePreventionMode = &selfTradePreventionMode
 	return s
 }
@@ -153,21 +153,21 @@ func (s *CreateMarginOrderService) Do(ctx context.Context, opts ...RequestOption
 
 // OrderResponse define order info
 type CreateMarginOrderResponse struct {
-	Symbol                  string                              `json:"symbol"`
-	OrderID                 int64                               `json:"orderId"`
-	ClientOrderID           string                              `json:"clientOrderId"`
-	TransactTime            int64                               `json:"transactTime"`
-	Price                   string                              `json:"price"`
-	SelfTradePreventionMode binance.SelfTradePreventionModeType `json:"selfTradePreventionMode"`
-	OrigQty                 string                              `json:"origQty"`
-	ExecutedQty             string                              `json:"executedQty"`
-	CummulativeQuoteQty     string                              `json:"cummulativeQuoteQty"`
-	Status                  binance.OrderStatusType             `json:"status"`
-	TimeInForce             binance.TimeInForceType             `json:"timeInForce"`
-	Type                    binance.OrderType                   `json:"type"`
-	Side                    binance.SideType                    `json:"side"`
-	MarginBuyBorrowAmount   string                              `json:"marginBuyBorrowAmount,omitempty"`
-	MarginBuyBorrowAsset    string                              `json:"marginBuyBorrowAsset,omitempty"`
+	Symbol                  string                  `json:"symbol"`
+	OrderID                 int64                   `json:"orderId"`
+	ClientOrderID           string                  `json:"clientOrderId"`
+	TransactTime            int64                   `json:"transactTime"`
+	Price                   string                  `json:"price"`
+	SelfTradePreventionMode binance.STPModeType     `json:"selfTradePreventionMode"`
+	OrigQty                 string                  `json:"origQty"`
+	ExecutedQty             string                  `json:"executedQty"`
+	CummulativeQuoteQty     string                  `json:"cummulativeQuoteQty"`
+	Status                  binance.OrderStatusType `json:"status"`
+	TimeInForce             binance.TimeInForceType `json:"timeInForce"`
+	Type                    binance.OrderType       `json:"type"`
+	Side                    binance.SideType        `json:"side"`
+	MarginBuyBorrowAmount   string                  `json:"marginBuyBorrowAmount,omitempty"`
+	MarginBuyBorrowAsset    string                  `json:"marginBuyBorrowAsset,omitempty"`
 	Fills                   []struct {
 		Price           string `json:"price"`
 		Qty             string `json:"qty"`
