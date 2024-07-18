@@ -63,6 +63,9 @@ type FuturesTransferStatusType string
 // SideEffectType define side effect type for orders
 type SideEffectType string
 
+// SelfTradePreventionModeType define self trade prevention mode type
+type SelfTradePreventionModeType string
+
 // FuturesTransferType define futures transfer type
 type FuturesTransferType int
 
@@ -198,6 +201,11 @@ const (
 	SideEffectTypeNoSideEffect SideEffectType = "NO_SIDE_EFFECT"
 	SideEffectTypeMarginBuy    SideEffectType = "MARGIN_BUY"
 	SideEffectTypeAutoRepay    SideEffectType = "AUTO_REPAY"
+
+	SelfTradePreventionModeTypeNone        SelfTradePreventionModeType = "NONE"
+	SelfTradePreventionModeTypeExpireTaker SelfTradePreventionModeType = "EXPIRE_TAKER"
+	SelfTradePreventionModeTypeExpireMaker SelfTradePreventionModeType = "EXPIRE_MAKER"
+	SelfTradePreventionModeTypeExpireBoth  SelfTradePreventionModeType = "EXPIRE_BOTH"
 
 	TransactionTypeDeposit  TransactionType = "0"
 	TransactionTypeWithdraw TransactionType = "1"

@@ -64,25 +64,25 @@ func (s *QueryUMOrderService) Do(ctx context.Context, opts ...RequestOption) (re
 
 // OrderResponse define order info
 type UMQueryOrderResponse struct {
-	AvgPrice                string                   `json:"avgPrice"`
-	ClientOrderId           string                   `json:"clientOrderId"`
-	CumQuote                string                   `json:"cumQuote"`
-	ExecutedQty             string                   `json:"executedQty"`
-	OrderId                 int64                    `json:"orderId"`
-	OrigQty                 string                   `json:"origQty"`
-	OrigType                futures.OrderType        `json:"origType"`
-	Price                   string                   `json:"price"`
-	ReduceOnly              bool                     `json:"reduceOnly"`
-	Side                    futures.SideType         `json:"side"`
-	PositionSide            futures.PositionSideType `json:"positionSide"`
-	Status                  futures.OrderStatusType  `json:"status"`
-	Symbol                  string                   `json:"symbol"`
-	Time                    int64                    `json:"time"`
-	TimeInForce             futures.TimeInForceType  `json:"timeInForce"`
-	Type                    futures.OrderType        `json:"type"`
-	UpdateTime              int64                    `json:"updateTime"`
-	SelfTradePreventionMode string                   `json:"selfTradePreventionMode"`
-	GoodTillDate            int64                    `json:"goodTillDate"`
+	AvgPrice                string                              `json:"avgPrice"`
+	ClientOrderId           string                              `json:"clientOrderId"`
+	CumQuote                string                              `json:"cumQuote"`
+	ExecutedQty             string                              `json:"executedQty"`
+	OrderId                 int64                               `json:"orderId"`
+	OrigQty                 string                              `json:"origQty"`
+	OrigType                futures.OrderType                   `json:"origType"`
+	Price                   string                              `json:"price"`
+	ReduceOnly              bool                                `json:"reduceOnly"`
+	Side                    futures.SideType                    `json:"side"`
+	PositionSide            futures.PositionSideType            `json:"positionSide"`
+	Status                  futures.OrderStatusType             `json:"status"`
+	Symbol                  string                              `json:"symbol"`
+	Time                    int64                               `json:"time"`
+	TimeInForce             futures.TimeInForceType             `json:"timeInForce"`
+	Type                    futures.OrderType                   `json:"type"`
+	UpdateTime              int64                               `json:"updateTime"`
+	SelfTradePreventionMode futures.SelfTradePreventionModeType `json:"selfTradePreventionMode"`
+	GoodTillDate            int64                               `json:"goodTillDate"`
 }
 
 // NewListUMOpenOrdersService init list UM open orders service
