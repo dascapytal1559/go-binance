@@ -1301,8 +1301,7 @@ func (s *websocketServiceTestSuite) testDiffDepthServe(rateMs string, expectedEr
 }
 
 func (s *websocketServiceTestSuite) TestWsCombinedDiffDepthServe() {
-	slr := []string{"BTCUSDT", "", ""}
-	slrs := [][]string{slr}
+	symbolRates := map[string]string{"BTCUSDT": ""}
 	data := []byte(`{
 		"stream":"btcusdt@depth",
 		"data":{
@@ -1319,7 +1318,7 @@ func (s *websocketServiceTestSuite) TestWsCombinedDiffDepthServe() {
 	s.mockWsServe(data, errors.New(fakeErrMsg))
 	defer s.assertWsServe()
 
-	doneC, stopC, err := WsCombinedDiffDepthServe(slrs, func(event *WsDepthEvent) {
+	doneC, stopC, err := WsCombinedDiffDepthServe(symbolRates, func(event *WsDepthEvent) {
 		e := &WsDepthEvent{
 			Event:            "depthUpdate",
 			Time:             1628847118038,

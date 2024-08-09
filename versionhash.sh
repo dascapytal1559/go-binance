@@ -3,7 +3,7 @@
 # > ./datetime_hash.sh <commit-hash>
 
 # Generates a version hash that you can use in your go.mod for replacement, e.g.
-# replace github.com/adshao/go-binance/v2 => github.com/dascapytal1559/go-binance/v2 <generated-hash>
+# replace github.com/adshao/go-binance/v2 => github.com/dascapytal1559/go-binance/v2 v2.0.0-<generated-hash>
 
 # Ensure a commit hash is provided
 if [ -z "$1" ]; then
@@ -28,5 +28,5 @@ if [ -z "$datetime" ]; then
 fi
 
 # Construct the pseudo-version
-pseudo_version="v2.0.0-${datetime}-${commit_hash:0:12}"
+pseudo_version="${datetime}-${commit_hash:0:12}"
 echo $pseudo_version
