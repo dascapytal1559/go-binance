@@ -2,19 +2,24 @@ package pmargin
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTradeServiceHistorical(t *testing.T) {
+func TestIncomeHistoryTest(t *testing.T) {
 	client := NewClient(
 		os.Getenv("TEST_BINANCE_API_KEY"),
 		os.Getenv("TEST_BINANCE_SECRET_KEY"),
 	)
 
-	trades, err := client.NewHistoricalTradesService().FromID(0).Do(context.TODO())
+	trades, err := client.NewIncomeHistoryService().Symbol("1000PEPEUSDT").Do(context.Background())
+
+	for _, t := range trades {
+		fmt.Printf("%v, %v\n", t.IncomeType, t.Income)
+	}
 
 	assert.Nil(t, err)
 	assert.NotNil(t, trades)
